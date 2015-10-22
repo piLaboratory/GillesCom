@@ -1,0 +1,21 @@
+Package: GillesCom
+Type: Package
+Title: Gillespie Simulation of Ecological Communities Dynamics
+Version: 0.0.1
+Date: 2015-10-21
+Author: Paulo I. Prado and Andre Chalom
+Maintainer: Paulo I. Prado <prado@ib.usp.br>
+Depends:
+    stats,
+    methods,
+    graphics,
+    grDevices
+Suggests:
+    sads
+Description: Simulation tools for generating ecological community data (such as 
+  species abundance distributions) using the Gillespie continuous time method.
+License: GPL-2
+LazyData: true
+Encoding: UTF-8
+URL: https://github.com/piLaboratory/GillesCom
+BugReports: https://github.com/piLaboratory/GillesCom/issues 
