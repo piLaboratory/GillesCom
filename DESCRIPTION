@@ -9,9 +9,11 @@ Depends:
     stats,
     methods,
     graphics,
+    Rcpp,
     grDevices
 Suggests:
     sads
+LinkingTo: Rcpp
 Description: Simulation tools for generating ecological community data (such as 
   species abundance distributions) using the Gillespie continuous time method.
 License: GPL-2
