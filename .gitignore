@@ -1,3 +1,4 @@
+src/RcppExports.cpp
 R/RcppExports.R
 *.o
 *.so

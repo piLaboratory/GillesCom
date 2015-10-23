@@ -21,7 +21,7 @@ Community *C = NULL;
 
 // [[Rcpp::export]]
 void create_community(Rcpp::NumericVector abundance, Rcpp::NumericMatrix interaction) {
-//  if (C!=NULL) warning!!
+  if (C!=NULL) std::cout << "Warning: overwriting previous Community" << std::endl;
   C = new Community(abundance, interaction);
 }
 
