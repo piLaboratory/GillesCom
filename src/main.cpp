@@ -5,21 +5,28 @@
 
 class Community {
   private:
-    std::vector<int> abundance;
+    Rcpp::NumericVector abundance;
+    Rcpp::NumericMatrix interaction;
   public:
-    std::vector<int> const get_abundance() {return abundance;}
-    int get_nspecies() {return abundance.size();}
-    Community() {
-      
+    Rcpp::NumericVector const get_abundance() {return abundance;}
+    int nspecies() {return abundance.size();}
+    Community(Rcpp::NumericVector _abundance, Rcpp::NumericMatrix _interaction) {
+      abundance = _abundance;
+      interaction = _interaction;
     }
 };
 
 // Global var???
-double x = 0;
+Community *C = NULL;
 
 // [[Rcpp::export]]
-double test_basic(){
-  x++;
+void create_community(Rcpp::NumericVector abundance, Rcpp::NumericMatrix interaction) {
+//  if (C!=NULL) warning!!
+  C = new Community(abundance, interaction);
+}
 
-	return x;
+//[[Rcpp::export]]
+Rcpp::NumericVector abundance() {
+  if (C==NULL) return 0;
+  return C->get_abundance();
 }

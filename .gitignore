@@ -1,1 +1,3 @@
 R/RcppExports.R
+*.o
+*.so

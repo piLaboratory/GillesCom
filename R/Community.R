@@ -5,9 +5,8 @@
 #' The \code{Community} object is one of the fundamental objects in the GillesCom package.
 #' @export
 #' @useDynLib GillesCom
-Community <- function() {
- print(test_basic()) 
-  new("Community", list())
+Init_Community <- function(abundance) {
+  if(length(abundance) > 100000) stop("Maximum number of species reached!")
+  # Error checking, etc
+  create_community(abundance)
 }
-
-setClass("Community", representation("list"))
