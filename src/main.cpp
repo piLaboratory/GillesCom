@@ -25,12 +25,13 @@ class Community {
     }
     arma::vec bdm() {
       arma::vec d = (b-d0)/K;
-      arma::vec N = abundance;// * interaction;
-//      for(int i = 0; i < abundance.n_elem; i++) if(abundance[i] == 0) N[i] == 0;
+      arma::vec N = trans(abundance.t() * interaction);
+      for(int i = 0; i < abundance.n_elem; i++) if(abundance(i) == 0) N(i) = 0;
+      d = d0 + d % N; // element wise multiplication
+      arma::vec w;
+//      w = abundance * (b + d) + m;
 
 //    d <- (b-d0)/K # slope of the density-dependent linear relation of death rate to N
-//    N <- N0
-//    N[N0>0] <- N0[N0>0] %*% alphas[N0>0,N0>0]
 //    dt <- d0+d*N # death rates of each species
 //    w <- N0*(b+dt) + m  # Gillespie weights for each specie, which are the sum of their rates
 //    i <- sample((1:length(N)), size=1, prob=w) ## sampling which species will suffer the next action, proportionaly to their weights
