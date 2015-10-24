@@ -1,28 +1,10 @@
-
-# Sample data
-#cs <- 100
-#K <- 100
-#d0=0
-#b=rep(1, cs)
-#m=rep(0.1,cs)
-#N0 <- rep(10,cs)
-#alphas <- matrix(rnorm(cs*cs)^2, ncol=cs)
-#alpha <- c()
-#for (j in 1:100) {
-#  for (i in 1:1000) N0 <- bdm(N0, alphas, K, d0, b, m)
-#  alpha <- c(alpha, coef(fitls(N0[N0>0]))[2])
-#}
-#plot(alpha)
-
-#' Run one interaction of a Gillespie Algorithm of birth death and migration process in a system of generalized Lotka-Volterra system of competing species
-#' @param N0 vector of initial abundances of species in the community (set species not present to zero)
-#' @param alphas matrix of interaction coefficients
-#' @param K carrying capacities of species
-#' @param d0 death rate when N=0
-#' @param b birth rates (constant)
-#' @param m per capita migration rate in the metacommunity
 # TBI: include continuous time record (sampling from an exponential)
-Rbdm <- function(N0, alphas, K, d0=0, b, m){
+Rbdm <- function(N0, alphas, K=100, d0=0, b=1, m=0.1){
+    J <- length(N0)
+    if(length(K)==1) K <- rep(K,J)
+    if(length(d0)==1) d0 <- rep(d0,J)
+    if(length(b)==1) b <- rep(b,J)
+    if(length(m)==1) m <- rep(m,J)
     d <- (b-d0)/K # slope of the density-dependent linear relation of death rate to N
     N <- N0
     N[N0>0] <- N0[N0>0] %*% alphas[N0>0,N0>0]
@@ -56,6 +38,7 @@ run.bdm <- function(alphas, N0, K, d0=0, b, m, con, stren=0.1, comp=TRUE,  nrep,
     if(length(K)==1) K <- rep(K,J)
     if(length(d0)==1) d0 <- rep(d0,J)
     if(length(b)==1) b <- rep(b,J)
+    if(length(m)==1) m <- rep(m,J)
     step <- 0
     ## Assembling the interaction matrix (should be an auxiliary function)
     ##
@@ -72,7 +55,3 @@ run.bdm <- function(alphas, N0, K, d0=0, b, m, con, stren=0.1, comp=TRUE,  nrep,
     }
     if(return.df) read.table(file)
 }
-
-
-
-

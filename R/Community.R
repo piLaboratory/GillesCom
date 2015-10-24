@@ -1,12 +1,31 @@
 #' Community
 #' 
-#' Functions for generating and altering \code{Community} objects
+#' Functions for generating and altering the simulated Community. Function \code{Init_Community}
+#' initializes a simulation.
 #' 
-#' The \code{Community} object is one of the fundamental objects in the GillesCom package.
+#' Because of the way the interaction with the underlying c++ code is implemented, only one
+#' community may be simulated at a time. Calling \code{Init_Community} more than once will
+#' overwrite the previous simulation objects!
+#' @param abundance vector of initial abundances of species in the community (set species not present to zero). For convenience, a single number is expanded as \code{rep(1,N)}.
+#' @param interaction matrix of interaction coefficients, see \code{\link{Interaction}}.
+#' @param K carrying capacities of each species
+#' @param d0 death rate when N=0
+#' @param b birth rates (constant)
+#' @param m per capita migration rate in the metacommunity
+#' @examples
+#' Init_Community(100)
+#' for (i in 1:50000) bdm()
+#' (ab <- as.numeric(abundance()))
+#' if(require(sads)) {
+#'    f <- fitlnorm(ab[ab>0])
+#'    plot(f)
+#' }
 #' @export
 #' @useDynLib GillesCom
-Init_Community <- function(abundance, interaction, K = 100, b = 1, m = 0.1, d0 = 0) {
+#' @rdname Community
+Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0) {
   # Error checking, etc
+  if (length(abundance)==1) abundance <- rep(1, abundance)
   J <- length(abundance)
   if(missing(interaction)) interaction <- Interaction(J)
   if(J > 100000) stop("Maximum number of species reached!")
@@ -21,10 +40,16 @@ Init_Community <- function(abundance, interaction, K = 100, b = 1, m = 0.1, d0 =
   create_community(abundance, interaction, K, d0, b, m)
 }
 
+#' Interaction matrix
+#' 
+#' \code{Interaction} generates a Lotka-Volterra interaction matrix, following May. For a 
+#' Caswell matrix, use \code{diag(J)}, and for a Hubbell matrix, use \code{ones(J)}.
+#'
 #' @param J size of metacommunity
 #' @param con connectance of the interaction matrix. Defaults to 1 (totally connected)
 #' @param stren strength of interaction matrix, which is the standard deviation of the Gaussin from which the values are drawn
 #' @param comp Logical. Use \code{TRUE} for a competition only matrix (all entries are positive); \code{FALSE} for otherwise
+#' @export
 Interaction <- function(J, stren = 0.1, con = 1, comp = TRUE) {
   alphas <- matrix(rnorm(J*J,sd=stren), ncol=J)
   if(comp) alphas <- abs(alphas)
@@ -40,3 +65,24 @@ Interaction <- function(J, stren = 0.1, con = 1, comp = TRUE) {
   }
   alphas
 }
+
+#' @export
+#' @rdname Interaction
+ones <- function(J) matrix(rep(1, J*J), ncol=J)
+
+
+#' Function \code{bdm} runs one interaction of a Gillespie Algorithm of birth death and migration process in 
+#' a system of generalized Lotka-Volterra system of competing species
+#' @rdname Community
+#' @export
+"bdm"
+
+#' Function \code{abundance} returns the current abundance vector for the community.
+#' @rdname Community
+#' @export
+"abundance"
+
+#' Function \code{time} returns the current simulation time for the community (TBI!)
+#' @rdname Community
+#' @export
+"time"
