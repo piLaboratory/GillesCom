@@ -58,20 +58,6 @@ run.bdm <- function(alphas, N0, K, d0=0, b, m, con, stren=0.1, comp=TRUE,  nrep,
     if(length(b)==1) b <- rep(b,J)
     step <- 0
     ## Assembling the interaction matrix (should be an auxiliary function)
-    if(missing(alphas)||is.null(alphas)){
-        alphas <- matrix(rnorm(J*J,sd=stren), ncol=J)
-        if(comp) alphas <- abs(alphas)
-        diag(alphas) <- 1
-        if(con<1){
-            indexes <- expand.grid(1:J,1:J)
-            indexes <- indexes[indexes[,1]!=indexes[,2],]
-            ind.i <- sample(c(TRUE,FALSE), nrow(indexes), replace=TRUE, prob=c(1-con, con))
-            if(sum(ind.i)>0){
-                indexes <- indexes[ind.i]
-                alphas[indexes[,1], indexes[,2]] <- 0
-            }
-        }
-    }
     ##
     df <- data.frame(time=rep(step,J), sp=1:J, N=N0)
     write.table(df, file=file, row.names=FALSE)
