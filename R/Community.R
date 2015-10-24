@@ -13,13 +13,18 @@
 #' @param b birth rates (constant)
 #' @param m per capita migration rate in the metacommunity
 #' @examples
+#' # Initializes the community (in a global object)
 #' Init_Community(100)
+#' # Runs 50000 iteractions of the birth-death-migration process
 #' for (i in 1:50000) bdm()
+#' # Gets and analyzes the abundance vector
 #' (ab <- as.numeric(abundance()))
 #' if(require(sads)) {
 #'    f <- fitlnorm(ab[ab>0])
 #'    plot(f)
 #' }
+#' # Simulation internal time elapsed
+#' time()
 #' @export
 #' @useDynLib GillesCom
 #' @rdname Community
@@ -70,7 +75,6 @@ Interaction <- function(J, stren = 0.1, con = 1, comp = TRUE) {
 #' @rdname Interaction
 ones <- function(J) matrix(rep(1, J*J), ncol=J)
 
-
 #' Function \code{bdm} runs one interaction of a Gillespie Algorithm of birth death and migration process in 
 #' a system of generalized Lotka-Volterra system of competing species
 #' @rdname Community
@@ -82,7 +86,7 @@ ones <- function(J) matrix(rep(1, J*J), ncol=J)
 #' @export
 "abundance"
 
-#' Function \code{time} returns the current simulation time for the community (TBI!)
+#' Function \code{time} returns the current simulation time for the community.
 #' @rdname Community
 #' @export
 "time"

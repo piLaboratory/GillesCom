@@ -53,7 +53,8 @@ class Community {
         abundance(c) --;
       else 
         abundance(c) ++;
-      
+      // advances the simulation clock
+      time += R::rexp(1.0 / sum(w));
       return abundance;
     }
 };

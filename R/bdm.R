@@ -15,6 +15,8 @@ Rbdm <- function(N0, alphas, K=100, d0=0, b=1, m=0.1){
     return(N0)
 }
 
+#' Helper functions
+#' 
 #' Generates migration rates from a log-series metacommunity
 #' @param J size of metacommunity
 #' @param alpha Fisher's alpha
@@ -29,7 +31,8 @@ ls.m <- function(J, alpha, m){
 }
 
 
-## Running many times
+#' Running many times
+#' 
 #' @param con connectance of the interaction matrix
 #' @param stren strength of interaction matrix, which is the standard deviation of the Gaussin from which the values are drawn
 run.bdm <- function(alphas, N0, K, d0=0, b, m, con, stren=0.1, comp=TRUE,  nrep, rec.step, file="teste.dat", return.df=FALSE){

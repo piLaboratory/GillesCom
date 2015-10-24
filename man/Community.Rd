@@ -37,7 +37,7 @@ a system of generalized Lotka-Volterra system of competing species
 
 Function \code{abundance} returns the current abundance vector for the community.
 
-Function \code{time} returns the current simulation time for the community (TBI!)
+Function \code{time} returns the current simulation time for the community.
 }
 \details{
 Because of the way the interaction with the underlying c++ code is implemented, only one
@@ -45,12 +45,17 @@ community may be simulated at a time. Calling \code{Init_Community} more than on
 overwrite the previous simulation objects!
 }
 \examples{
+# Initializes the community (in a global object)
 Init_Community(100)
+# Runs 50000 iteractions of the birth-death-migration process
 for (i in 1:50000) bdm()
+# Gets and analyzes the abundance vector
 (ab <- as.numeric(abundance()))
 if(require(sads)) {
    f <- fitlnorm(ab[ab>0])
    plot(f)
 }
+# Simulation internal time elapsed
+time()
 }
 

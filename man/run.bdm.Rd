@@ -2,6 +2,7 @@
 % Please edit documentation in R/bdm.R
 \name{run.bdm}
 \alias{run.bdm}
+\title{Running many times}
 \usage{
 run.bdm(alphas, N0, K, d0 = 0, b, m, con, stren = 0.1, comp = TRUE, nrep,
   rec.step, file = "teste.dat", return.df = FALSE)
@@ -10,5 +11,8 @@ run.bdm(alphas, N0, K, d0 = 0, b, m, con, stren = 0.1, comp = TRUE, nrep,
 \item{con}{connectance of the interaction matrix}
 
 \item{stren}{strength of interaction matrix, which is the standard deviation of the Gaussin from which the values are drawn}
+}
+\description{
+Running many times
 }
 

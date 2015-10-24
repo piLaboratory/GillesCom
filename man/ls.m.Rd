@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdm.R
 \name{ls.m}
 \alias{ls.m}
-\title{Generates migration rates from a log-series metacommunity}
+\title{Helper functions}
 \usage{
 ls.m(J, alpha, m)
 }
