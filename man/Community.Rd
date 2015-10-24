@@ -9,7 +9,7 @@
 \usage{
 Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0)
 
-bdm()
+bdm(count = 1L)
 
 abundance()
 

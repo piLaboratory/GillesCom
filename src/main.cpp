@@ -38,7 +38,7 @@ class Community {
       K = _K; d0 = _d0; b = _b; m = _m;
       time  = 0;
     }
-    arma::vec bdm() {
+    void bdm() {
       arma::vec d = (b-d0)/K; //slope of the density-dependent linear relation of death rate to N
       arma::vec N = trans(abundance.t() * interaction);
       for (int i = 0; i < abundance.n_elem; i++) if(abundance(i) == 0) N(i) = 0;
@@ -55,7 +55,7 @@ class Community {
         abundance(c) ++;
       // advances the simulation clock
       time += R::rexp(1.0 / sum(w));
-      return abundance;
+      return;
     }
 };
 
@@ -72,7 +72,7 @@ void create_community(arma::vec abundance, arma::mat interaction,
 
 //[[Rcpp::export]]
 arma::vec abundance() {
-  if (C==NULL) return 0;
+  if (C==NULL) return arma::vec(1, arma::fill::zeros);
   return C->get_abundance();
 }
 
@@ -83,7 +83,8 @@ double time() {
 }
 
 //[[Rcpp::export]]
-arma::vec bdm() {
-  if (C==NULL) return 0;
-  return C->bdm();
+void bdm(int count = 1) {
+  if (C==NULL) return;
+  for (int i = 0; i < count; i ++)
+    C->bdm();
 }
