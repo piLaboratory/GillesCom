@@ -22,7 +22,7 @@
 #' @param b birth rates (constant)
 #' @param m per capita migration rate in the metacommunity
 # TBI: include continuous time record (sampling from an exponential)
-bdm <- function(N0, alphas, K, d0=0, b, m){
+Rbdm <- function(N0, alphas, K, d0=0, b, m){
     d <- (b-d0)/K # slope of the density-dependent linear relation of death rate to N
     N <- N0
     N[N0>0] <- N0[N0>0] %*% alphas[N0>0,N0>0]

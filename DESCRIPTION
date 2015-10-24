@@ -5,16 +5,15 @@ Version: 0.0.1
 Date: 2015-10-21
 Author: Paulo I. Prado and Andre Chalom
 Maintainer: Paulo I. Prado <prado@ib.usp.br>
-Depends:
+Imports:
     stats,
     methods,
     graphics,
-    Rcpp,
     grDevices,
     sads,
     ggplot2,
     Matrix
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppArmadillo
 Description: Simulation tools for generating ecological community data (such as 
   species abundance distributions) using the Gillespie continuous time method.
 License: GPL-2
