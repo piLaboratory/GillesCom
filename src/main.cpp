@@ -48,11 +48,11 @@ class Community {
       dslope = (b-d0)/K; //slope of the density-dependent linear relation of death rate to N
     }
     void bdm() {
-      arma::vec N = trans(abundance.t() * interaction);
-      for (int i = 0; i < abundance.n_elem; i++) if(abundance(i) == 0) N(i) = 0;
-      arma::vec d = d0 + dslope % N; // % performs element-wise multiplication
+      // % performs element-wise multiplication
+      arma::vec d = d0 + dslope % (abundance.t() * interaction).t();
+      for (int i = 0; i < abundance.n_elem; i++) if(abundance(i) == 0) d(i) = 0;
       //Gillespie weights for each specie, which are the sum of their rates
-      arma::vec w = abundance % (b + d) + m; 
+      arma::vec w = (abundance % (b + d)) + m; 
       //sampling which species will suffer the next action, proportionaly to their weights
       int c = Csample(w);
       // Should the selected species gain or lose an individual?
