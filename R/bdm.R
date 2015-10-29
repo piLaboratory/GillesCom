@@ -21,6 +21,8 @@ Rbdm <- function(N0, alphas, K=100, d0=0, b=1, m=0.1){
 #' @param J size of metacommunity
 #' @param alpha Fisher's alpha
 #' @param m per species migration rate
+#' @export
+#' @import sads
 ls.m <- function(J, alpha, m){
     ## expected number of species
     S <- ceiling(alpha*log(1+J/alpha))

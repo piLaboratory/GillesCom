@@ -7,12 +7,8 @@ Author: Paulo I. Prado and Andre Chalom
 Maintainer: Paulo I. Prado <prado@ib.usp.br>
 Imports:
     stats,
-    methods,
     graphics,
-    grDevices,
-    sads,
-    ggplot2,
-    Matrix
+    sads
 LinkingTo: Rcpp, RcppArmadillo
 Description: Simulation tools for generating ecological community data (such as 
   species abundance distributions) using the Gillespie continuous time method.

@@ -27,6 +27,8 @@ time()
 \item{m}{per capita migration rate in the metacommunity}
 
 \item{d0}{death rate when N=0}
+
+\item{count}{Number of cycles to be simulated}
 }
 \description{
 Functions for generating and altering the simulated Community. Function \code{Init_Community}
@@ -51,10 +53,8 @@ Init_Community(100)
 for (i in 1:50000) bdm()
 # Gets and analyzes the abundance vector
 (ab <- as.numeric(abundance()))
-if(require(sads)) {
-   f <- fitlnorm(ab[ab>0])
-   plot(f)
-}
+f <- sads::fitlnorm(ab[ab>0])
+plot(f, which=1)
 # Simulation internal time elapsed
 time()
 }

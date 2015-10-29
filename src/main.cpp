@@ -3,6 +3,8 @@
 #include<string>
 #include<RcppArmadillo.h>
 
+Rcpp::Function warning("warning"); 
+
 // Samples a single integer from 0:(size-1) with probabilities prob
 // similar to R function sample(1:length(prob) - 1, 1, prob)
 // Notice that prob does not need to be normalized
@@ -74,7 +76,7 @@ Community *C = NULL;
 void create_community(arma::vec abundance, arma::mat interaction,
         arma::vec K, arma::vec d0, arma::vec b,
         arma::vec m) {
-  if (C!=NULL) std::cout << "Warning: overwriting previous Community" << std::endl;
+  if (C!=NULL) warning("Warning: overwriting previous Community");
   C = new Community(abundance, interaction, K, d0, b, m);
 }
 

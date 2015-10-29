@@ -19,13 +19,12 @@
 #' for (i in 1:50000) bdm()
 #' # Gets and analyzes the abundance vector
 #' (ab <- as.numeric(abundance()))
-#' if(require(sads)) {
-#'    f <- fitlnorm(ab[ab>0])
-#'    plot(f)
-#' }
+#' f <- sads::fitlnorm(ab[ab>0])
+#' plot(f, which=1)
 #' # Simulation internal time elapsed
 #' time()
 #' @export
+#' @import graphics
 #' @useDynLib GillesCom
 #' @rdname Community
 Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0) {
@@ -55,6 +54,7 @@ Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 
 #' @param stren strength of interaction matrix, which is the standard deviation of the Gaussin from which the values are drawn
 #' @param comp Logical. Use \code{TRUE} for a competition only matrix (all entries are positive); \code{FALSE} for otherwise
 #' @export
+#' @import stats
 Interaction <- function(J, stren = 0.1, con = 1, comp = TRUE) {
   alphas <- matrix(rnorm(J*J,sd=stren), ncol=J)
   if(comp) alphas <- abs(alphas)
@@ -78,6 +78,7 @@ ones <- function(J) matrix(rep(1, J*J), ncol=J)
 #' Function \code{bdm} runs one interaction of a Gillespie Algorithm of birth death and migration process in 
 #' a system of generalized Lotka-Volterra system of competing species
 #' @rdname Community
+#' @param count Number of cycles to be simulated
 #' @export
 "bdm"
 
