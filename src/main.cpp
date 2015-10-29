@@ -20,11 +20,19 @@ int Csample (arma::vec prob) {
 
 class Community {
   private:
+    // abundance vector: counts how many individuals from each species
     arma::vec abundance;
+    // interaction matrix
     arma::mat interaction;
+    // support capacity
     arma::vec K;
+    // death rate when abundance=0
     arma::vec d0;
+    // current death rate ("cached" for bdm())
+    arma::vec dslope;
+    // birth rate
     arma::vec b;
+    // migration rate
     arma::vec m;
     double time;
   public:
@@ -37,12 +45,12 @@ class Community {
       interaction = _interaction;
       K = _K; d0 = _d0; b = _b; m = _m;
       time  = 0;
+      dslope = (b-d0)/K; //slope of the density-dependent linear relation of death rate to N
     }
     void bdm() {
-      arma::vec d = (b-d0)/K; //slope of the density-dependent linear relation of death rate to N
       arma::vec N = trans(abundance.t() * interaction);
       for (int i = 0; i < abundance.n_elem; i++) if(abundance(i) == 0) N(i) = 0;
-      d = d0 + d % N; // element wise multiplication
+      arma::vec d = d0 + dslope % N; // % performs element-wise multiplication
       //Gillespie weights for each specie, which are the sum of their rates
       arma::vec w = abundance % (b + d) + m; 
       //sampling which species will suffer the next action, proportionaly to their weights
