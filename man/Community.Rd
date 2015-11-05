@@ -2,21 +2,13 @@
 % Please edit documentation in R/Community.R
 \name{Init_Community}
 \alias{Init_Community}
-\alias{abundance}
-\alias{bdm}
-\alias{time}
 \title{Community}
 \usage{
-Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0)
-
-bdm(count = 1L)
-
-abundance()
-
-time()
+Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
+  save.int = 1)
 }
 \arguments{
-\item{abundance}{vector of initial abundances of species in the community (set species not present to zero). For convenience, a single number is expanded as \code{rep(1,N)}.}
+\item{abundance}{vector of initial abundances of species in the community (set species not present to zero). For convenience, a single number is expanded as \code{rep(1,N)} (this also happens with parameters K, d0, b and m).}
 
 \item{interaction}{matrix of interaction coefficients, see \code{\link{Interaction}}.}
 
@@ -28,18 +20,11 @@ time()
 
 \item{d0}{death rate when N=0}
 
-\item{count}{Number of cycles to be simulated}
+\item{save.int}{History saving interval (in simulated time units)}
 }
 \description{
 Functions for generating and altering the simulated Community. Function \code{Init_Community}
 initializes a simulation.
-
-Function \code{bdm} runs one interaction of a Gillespie Algorithm of birth death and migration process in
-a system of generalized Lotka-Volterra system of competing species
-
-Function \code{abundance} returns the current abundance vector for the community.
-
-Function \code{time} returns the current simulation time for the community.
 }
 \details{
 Because of the way the interaction with the underlying c++ code is implemented, only one
@@ -49,13 +34,15 @@ overwrite the previous simulation objects!
 \examples{
 # Initializes the community (in a global object)
 Init_Community(100)
-# Runs 50000 iteractions of the birth-death-migration process
-for (i in 1:50000) bdm()
+# Runs 1e6 iteractions of the birth-death-migration process
+bdm(1e6)
 # Gets and analyzes the abundance vector
 (ab <- as.numeric(abundance()))
 f <- sads::fitlnorm(ab[ab>0])
 plot(f, which=1)
 # Simulation internal time elapsed
 time()
+# History saves a line for each time period elapsed (starting with 0):
+dim(history())
 }
 

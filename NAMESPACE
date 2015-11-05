@@ -2,11 +2,8 @@
 
 export(Init_Community)
 export(Interaction)
-export(abundance)
-export(bdm)
 export(ls.m)
 export(ones)
-export(time)
 import(graphics)
 import(sads)
 import(stats)

@@ -24,6 +24,8 @@ class Community {
   private:
     // abundance vector: counts how many individuals from each species
     arma::vec abundance;
+    // history matrix: one row for the abundances at each specified time
+    arma::mat history;
     // interaction matrix
     arma::mat interaction;
     // support capacity
@@ -36,18 +38,24 @@ class Community {
     arma::vec b;
     // migration rate
     arma::vec m;
-    double time;
+    // current time, last time and history saving interval
+    double time, oldtime, save_int;
   public:
     arma::vec get_abundance() const {return abundance;}
+    arma::mat get_history() const {return history;}
     double get_time() const {return time;}
     Community(arma::vec _abundance, arma::mat _interaction,
         arma::vec _K, arma::vec _d0, arma::vec _b,
-        arma::vec _m) {
+        arma::vec _m, double _save_int) {
       abundance = _abundance;
+      history = abundance.t();
       interaction = _interaction;
       K = _K; d0 = _d0; b = _b; m = _m;
-      time  = 0;
+      time  = 0; oldtime = 0; save_int = _save_int;
       dslope = (b-d0)/K; //slope of the density-dependent linear relation of death rate to N
+    }
+    void saveHistory() {
+      history.insert_rows(history.n_rows, abundance.t());
     }
     void bdm() {
       // % performs element-wise multiplication
@@ -64,7 +72,12 @@ class Community {
       else 
         abundance(c) ++;
       // advances the simulation clock
-      time += R::rexp(1.0 / sum(w));
+      double elapsed = R::rexp(1.0 / sum(w));
+      if (elapsed > save_int) warning("Time elapsed larger than save interval!");
+      // only saves history if we have completed a saving period
+      if (((int) (time / save_int)) !=  ((int) ((time+elapsed)/save_int)))
+        saveHistory();
+      time += elapsed;
       return;
     }
 };
@@ -75,9 +88,9 @@ Community *C = NULL;
 // [[Rcpp::export]]
 void create_community(arma::vec abundance, arma::mat interaction,
         arma::vec K, arma::vec d0, arma::vec b,
-        arma::vec m) {
+        arma::vec m, double save_int) {
   if (C!=NULL) warning("Warning: overwriting previous Community");
-  C = new Community(abundance, interaction, K, d0, b, m);
+  C = new Community(abundance, interaction, K, d0, b, m, save_int);
 }
 
 //[[Rcpp::export]]
@@ -90,6 +103,12 @@ arma::vec abundance() {
 double time() {
   if (C==NULL) return 0;
   return C->get_time();
+}
+
+//[[Rcpp::export]]
+arma::mat history() {
+  if (C==NULL) return arma::mat(1, 1, arma::fill::zeros);
+  return C->get_history();
 }
 
 //[[Rcpp::export]]
