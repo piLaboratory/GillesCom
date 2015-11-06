@@ -42,6 +42,7 @@ class Community {
     double time, oldtime, save_int;
   public:
     arma::vec get_abundance() const {return abundance;}
+    arma::vec get_K() const {return K;}
     arma::mat get_history() const {return history;}
     double get_time() const {return time;}
     Community(arma::vec _abundance, arma::mat _interaction,
@@ -97,6 +98,12 @@ void create_community(arma::vec abundance, arma::mat interaction,
 arma::vec abundance() {
   if (C==NULL) return arma::vec(1, arma::fill::zeros);
   return C->get_abundance();
+}
+
+//[[Rcpp::export]]
+arma::vec K() {
+  if (C==NULL) return arma::vec(1, arma::fill::zeros);
+  return C->get_K();
 }
 
 //[[Rcpp::export]]

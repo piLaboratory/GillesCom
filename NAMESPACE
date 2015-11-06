@@ -2,6 +2,7 @@
 
 export(Init_Community)
 export(Interaction)
+export(diagPlots)
 export(ls.m)
 export(ones)
 import(graphics)
