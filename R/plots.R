@@ -45,3 +45,25 @@ get.sdlog <- function (r) {
   a <- tryCatch({f <- sads::fitlnorm(r); return(bbmle::coef(f)[2]);}, error=function(x) return(NA));
   return(a)
 }
+
+#' @import grDevices
+# TODO: documentation
+# TODO: input parameters
+radOverTime <- function(steps) {
+  if (missing(steps)) steps <- time() 
+  palette <- grDevices::colorRampPalette(c("gray90", "gray10"))(steps)
+  palette <- grDevices::adjustcolor(palette, alpha.f=0.5)
+  h <- history()
+  now <- dim(h)[1]
+  J <- dim(h)[2]
+  if(now < steps) stop("Not enough simulated data for this number of steps, check history()")
+  tinc <- floor(now / steps)
+  ab <- as.numeric(abundance())
+  plot(0, type='n', log="y", xlab="Species Rank", ylab="Species Abundance", xlim=c(0, J), ylim=c(1, max(h)))
+  for (i in 1:steps) {
+    lines(rad(h[i * tinc, ]), col=palette[i])
+  }
+  lines(rad(ab), type='l', col='blue4', lwd=2)
+}
+
+
