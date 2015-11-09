@@ -1,0 +1,132 @@
+\documentclass[11pt, A4]{article}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+\usepackage{Sweave}
+\usepackage{natbib}
+\usepackage{framed, color}
+\usepackage{xspace}
+\definecolor{shadecolor}{rgb}{0.9, 0.9, 0.9}
+\setlength{\parindent}{0pt}
+\setlength{\hoffset}{-0.5in}
+\setlength{\textwidth}{6in}
+\setlength{\voffset}{-0.1in}
+\newcommand{\R}{\textnormal{\sffamily\bfseries R}\xspace}
+\newcommand{\code}[1]{\texttt{#1}}
+\SweaveOpts{eval=TRUE, keep.source=TRUE, echo=TRUE}
+%\VignetteIndexEntry{Introduction to GillesCom}
+
+\begin{document}
+
+\title{Simulating ecological communities using a Gillespie process \\ Quick reference for \code{GillesCom} package}
+\author{Paulo In\'acio Prado and Andre Chalom \\ Theoretical Ecology Lab \\ LAGE at the Dep of Ecology, USP, Brazil \\ 
+  \url{http://ecologia.ib.usp.br/let/} \\ \url{prado@ib.usp.br}}
+
+\date{November, 08, 2015}
+
+\maketitle
+
+@ 
+<<R setup, echo=FALSE, >>=
+options(width=60, continue=" ")
+set.seed(42)
+@ %def 
+
+\section{Introduction}
+
+%%% TODO
+
+\section{Installation}
+
+The package is currently available only from source on Github, can be installed in \R with the commands:
+
+@ 
+<<installation, eval=FALSE>>=
+install.packages('devtools')
+library(devtools)
+install_github('piLaboratory/GillesCom')
+@ %def 
+
+then loaded by
+
+<<load, eval=TRUE>>=
+library(GillesCom)
+@ %def 
+
+\section{Generating a metacommunity}
+
+One of the fundamental processes that governs the dynamics of a community is the arrival of migrants from
+a regional pool of species. The simplest model for the probability of arrival of each species is to
+assume that all individuals have the same probability of migration, so that the probability that a migrant
+is from species $i$ is directly proportional to the abundance of species $i$ in the regional pool. 
+
+The function \code{ls.m} can be used to generate the migration rates of several species from a logseries 
+metacommunity of size $J$, with a given Fisher's alpha and a per species migration rate of $m$:
+<<migration>>=
+migration <- ls.m(J = 1e6, alpha = 50, m = 1)
+(N <- length(migration))
+@
+
+Now $N$ is the number of species in the metacommunity. Let us now generate a matrix representing the
+interactions between species. There are three more widely used choices: the species may not interact at all
+with one another (so the matrix will have all zeroes on non-diagonal elements), the species may affect
+one another exactly as they affect an individual of the same species (which is, in a sense, neutral), or 
+the matrix may have random competition terms with one another. These matrices can be constructed using the 
+following functions:
+<<interaction>>=
+non.interact <- diag(N)
+neutral <- ones(N)
+random <- Interaction(N, stren = 0.1, con=1)
+@
+
+The additional parameters for function \code{Interaction} represent the strenght of the competition and 
+the connectivity of the interaction matrix.
+
+\section{Initializing the community}
+
+For performance reasons, this package works with a \emph{global} community object, so there can be only one
+active simulation at any given time. In order to initialize a community, use the function 
+\code{Init\_Community}. Notice that you don't need to assign this call to any object:
+<<Init>>=
+Init_Community(abundance=rep(0, N), interaction=random, b=1, m = migration)
+@
+
+The arguments $m$, $b$ and $d0$ of this function are expanded to vectors of the appropriate length, if
+necessary.
+
+\section{Running and examining the simulation}
+In order to run one step of the birth, death and migration process, execute the function \code{bdm}:
+<<bdm>>=
+bdm()
+bdm(1e4)
+@
+
+The function \code{bdm} accepts the number of cycles to be run as a parameter. In order to query about the
+current status of the simulation, the following functions are useful:
+<<functions>>=
+# Current abundance vector
+(ab <- as.numeric(abundance()))
+# Simulation internal time elapsed
+time()
+# `History` saves a line for each time period elapsed (starting with 0):
+dim(history())
+@
+
+Some diagnostic plots may be generated with:
+<<diagPlot, fig=TRUE>>=
+diagPlots()
+@
+
+Notice that the x-axis on the plots is given by units of simulated time, \emph{NOT} cycles.
+
+\section{Bugs and issues}
+\label{sec:bugs-issues}
+
+The package project is hosted on GitHub (\url{https://github.com/piLaboratory/GillesCom/}). 
+Please report bugs and issues and give us your feedback at 
+\url{https://github.com/piLaboratory/GillesCom/issues}.
+
+%%%\bibliographystyle{apalike}
+%%%\bibliography{GillesCom}
+\end{document}

@@ -20,6 +20,7 @@
 #' bdm(1e6)
 #' # Gets and analyzes the abundance vector
 #' (ab <- as.numeric(abundance()))
+#' require(sads)
 #' f <- sads::fitlnorm(ab[ab>0])
 #' plot(f, which=1)
 #' # Simulation internal time elapsed
