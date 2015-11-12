@@ -11,3 +11,9 @@ library(devtools)
 install_github("piLaboratory/GillesCom")
 ```
 
+See the examples on the package vignette with
+
+```R
+library(GillesCom)
+vignette(GillesCom)
+```

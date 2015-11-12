@@ -8,6 +8,8 @@ Maintainer: Paulo I. Prado <prado@ib.usp.br>
 Imports:
     stats,
     graphics,
+    Rcpp,
+    RcppArmadillo,
     sads
 LinkingTo: Rcpp, RcppArmadillo
 Description: Simulation tools for generating ecological community data (such as 
