@@ -67,48 +67,33 @@ radOverTime <- function(steps) {
 }
 
 
-octavOverTime <- function(steps, prop=FALSE) {
+# Same annotation as above
+octavOverTime <- function(steps, prop=TRUE) {
+  dots <- list() # TODO
   if (missing(steps)) steps <- time() 
   par.axis <- list() # TODO
   palette <- grDevices::colorRampPalette(c("gray90", "gray10"))(steps)
   palette <- grDevices::adjustcolor(palette, alpha.f=0.5)
   h <- history()
   now <- dim(h)[1]
+  maxO <- ceiling(max(log2(history()))+1)
   J <- dim(h)[2]
   if(now < steps) stop("Not enough simulated data for this number of steps, check history()")
-  plot.new()
-  plot(octav(as.numeric(abundance())), col="blue4", prop=prop)
+  plot(0, type='n', xlim=c(-0.5, maxO), ylim=c(0, 1))
+  if(!"ylab" %in% names(dots)) dots$ylab = "Proportion of species"
+  if(!"xlab" %in% names(dots)) dots$xlab = "Abundance class"
+  do.call(plot, c(list(x=0, axes=FALSE, type='n', xlim=c(-0.5, maxO), ylim=c(0,1)),dots))
   tinc <- floor(now / steps)
   ab <- as.numeric(abundance())
   for (i in 1:steps) {
-    lines(octav(h[i * tinc, ]), col=palette[i], prop=prop)
+    lines(octav(h[i * tinc, ]), col=palette[i], prop=prop, type='l')
   }
   lines(octav(as.numeric(abundance())), col="blue4", prop=prop, lwd=1.5)
+  x <- octav(as.numeric(abundance()))
+  xlab <- x[seq(1,length(x[,1]),2),2]
+    n <- as.numeric(as.character(x[,1]))
+    do.call(axis, c(list(side=2), par.axis))
+    do.call(axis, c(list(side=1,at=n[seq(1,length(x[,1]),2)],
+                         labels=xlab),par.axis))
 }
-
-myplot <- function(x, prop=FALSE, x.oct=FALSE, par.axis=list(), ...){
-            dots <- list(...)
-            x.hist <- rep(as.integer(as.character(x$octave)), as.integer(as.character(x$Freq)))
-            h1 <- hist(x=x.hist,
-                           breaks = c((min(as.integer(as.character(x$octave)))-1),as.integer(as.character(x$octave))),
-                           plot=FALSE)
-            if(prop) h1$counts <- h1$counts/sum(h1$counts)
-            if(x.oct) xlab <- x[seq(1,length(x[,1]),2),1]
-            if(!x.oct) xlab <- x[seq(1,length(x[,1]),2),2]
-            if(!"col" %in% names(dots)) dots$col = "gray"
-            if(!"main" %in% names(dots)) dots$main = ""
-            if(!"ylab" %in% names(dots) & !prop) dots$ylab = "N of species"
-            if(!"ylab" %in% names(dots) & prop) dots$ylab = "Proportion of species"
-            if(!"xlab" %in% names(dots) & !x.oct) dots$xlab = "Abundance class"
-            if(!"xlab" %in% names(dots) & x.oct) dots$xlab = "Abundance class (log2)"
-            if(!"axes" %in% names(dots)){
-                do.call(plot, c(list(x=h1, axes=FALSE, type='l'),dots, add=TRUE))
-                n <- as.numeric(as.character(x[,1]))
-                do.call(axis, c(list(side=2), par.axis))
-                do.call(axis, c(list(side=1,at=n[seq(1,length(x[,1]),2)],
-                     labels=xlab),par.axis))
-            }
-            else
-              do.call(plot, c(list(x=h1,dots)))
-          }
 
