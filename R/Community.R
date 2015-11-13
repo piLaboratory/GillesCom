@@ -79,11 +79,26 @@ Interaction <- function(J, stren = 0.1, con = 1, comp = TRUE) {
 #' @rdname Interaction
 ones <- function(J) matrix(rep(1, J*J), ncol=J)
 
-##' Function \code{bdm} runs one interaction of a Gillespie Algorithm of birth death and migration process in 
-##' a system of generalized Lotka-Volterra system of competing species
-##' @rdname Community
-##' @param count Number of cycles to be simulated
-##' @export
+#' Function \code{bdm} runs one interaction of a Gillespie Algorithm of birth death and migration process in 
+#' a system of generalized Lotka-Volterra system of competing species
+#' @rdname Community
+#' @param count Number of cycles to be simulated
+#' @param progress Should a text bar be used? Currently, "text" will produce a text based bar, and \code{NULL} will produce none.
+#' @export
+#' @import utils
+
+bdm <- function(count, progress="text") {
+  if (count < 100)
+    return(Cbdm(count))
+  step <- count / 100
+  if(progress=="text") pb <- utils::txtProgressBar(style=3)
+  for (i in 1:100) {
+    Cbdm(step)
+    if(progress=="text") setTxtProgressBar(pb, i/100)
+  }
+  if(progress=="text") cat ("\n") 
+}
+
 #"bdm"
 #
 ##' Function \code{abundance} returns the current abundance vector for the community.

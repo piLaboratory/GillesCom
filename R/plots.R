@@ -79,7 +79,6 @@ octavOverTime <- function(steps, prop=TRUE) {
   maxO <- ceiling(max(log2(history()))+1)
   J <- dim(h)[2]
   if(now < steps) stop("Not enough simulated data for this number of steps, check history()")
-  plot(0, type='n', xlim=c(-0.5, maxO), ylim=c(0, 1))
   if(!"ylab" %in% names(dots)) dots$ylab = "Proportion of species"
   if(!"xlab" %in% names(dots)) dots$xlab = "Abundance class"
   do.call(plot, c(list(x=0, axes=FALSE, type='n', xlim=c(-0.5, maxO), ylim=c(0,1)),dots))

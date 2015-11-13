@@ -7,9 +7,12 @@ Author: Paulo I. Prado and Andre Chalom
 Maintainer: Paulo I. Prado <prado@ib.usp.br>
 Imports:
     stats,
+    utils,
     graphics,
+    grDevices,
     Rcpp,
     RcppArmadillo,
+    bbmle,
     sads
 LinkingTo: Rcpp, RcppArmadillo
 Description: Simulation tools for generating ecological community data (such as 

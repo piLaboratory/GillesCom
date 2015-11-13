@@ -119,7 +119,7 @@ arma::mat history() {
 }
 
 //[[Rcpp::export]]
-void bdm(int count = 1) {
+void Cbdm(int count = 1) {
   if (C==NULL) return;
   for (int i = 0; i < count; i ++)
     C->bdm();
