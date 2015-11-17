@@ -15,5 +15,5 @@ See the examples on the package vignette with
 
 ```R
 library(GillesCom)
-vignette(GillesCom)
+vignette("GillesCom")
 ```

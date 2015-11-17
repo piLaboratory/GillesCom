@@ -87,7 +87,7 @@ ones <- function(J) matrix(rep(1, J*J), ncol=J)
 #' @export
 #' @import utils
 
-bdm <- function(count, progress="text") {
+bdm <- function(count=1, progress="text") {
   if (count < 100)
     return(Cbdm(count))
   step <- count / 100

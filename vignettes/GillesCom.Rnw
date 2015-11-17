@@ -99,14 +99,17 @@ necessary.
 In order to run one step of the birth, death and migration process, execute the function \code{bdm}:
 <<bdm>>=
 bdm()
-bdm(1e4)
+bdm(1e4, progress="none")
 @
 
-The function \code{bdm} accepts the number of cycles to be run as a parameter. In order to query about the
+The function \code{bdm} accepts the number of cycles to be run as the first parameter. 
+The second parameter controls whether a progress bar should be displayed on the screen.
+In order to query about the
 current status of the simulation, the following functions are useful:
 <<functions>>=
 # Current abundance vector
-(ab <- as.numeric(abundance()))
+ab <- as.numeric(abundance())
+ab[ab > 0]
 # Simulation internal time elapsed
 time()
 # `History` saves a line for each time period elapsed (starting with 0):
@@ -119,6 +122,7 @@ diagPlots()
 @
 
 Notice that the x-axis on the plots is given by units of simulated time, \emph{NOT} cycles.
+It should be clear from this graphics that the simulated community is far from equilibrium.
 
 \section{Bugs and issues}
 \label{sec:bugs-issues}
