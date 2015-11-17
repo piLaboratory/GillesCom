@@ -99,8 +99,6 @@ bdm <- function(count, progress="text") {
   if(progress=="text") cat ("\n") 
 }
 
-#"bdm"
-#
 ##' Function \code{abundance} returns the current abundance vector for the community.
 ##' @rdname Community
 ##' @export
