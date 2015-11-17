@@ -68,7 +68,7 @@ Interaction <- function(J, stren = 0.1, con = 1, comp = TRUE) {
     indexes <- indexes[indexes[,1]!=indexes[,2],]
     ind.i <- sample(c(TRUE,FALSE), nrow(indexes), replace=TRUE, prob=c(1-con, con))
     if(sum(ind.i)>0){
-      indexes <- indexes[ind.i]
+      indexes <- indexes[ind.i, ]
       alphas[indexes[,1], indexes[,2]] <- 0
     }
   }

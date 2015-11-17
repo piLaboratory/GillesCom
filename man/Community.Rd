@@ -2,10 +2,13 @@
 % Please edit documentation in R/Community.R
 \name{Init_Community}
 \alias{Init_Community}
+\alias{bdm}
 \title{Community}
 \usage{
 Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
   save.int = 1)
+
+bdm(count, progress = "text")
 }
 \arguments{
 \item{abundance}{vector of initial abundances of species in the community (set species not present to zero). For convenience, a single number is expanded as \code{rep(1,N)} (this also happens with parameters K, d0, b and m).}
@@ -21,10 +24,17 @@ Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
 \item{d0}{death rate when N=0}
 
 \item{save.int}{History saving interval (in simulated time units)}
+
+\item{count}{Number of cycles to be simulated}
+
+\item{progress}{Should a text bar be used? Currently, "text" will produce a text based bar, and \code{NULL} will produce none.}
 }
 \description{
 Functions for generating and altering the simulated Community. Function \code{Init_Community}
 initializes a simulation.
+
+Function \code{bdm} runs one interaction of a Gillespie Algorithm of birth death and migration process in
+a system of generalized Lotka-Volterra system of competing species
 }
 \details{
 Because of the way the interaction with the underlying c++ code is implemented, only one
