@@ -1,4 +1,4 @@
-# TBI: include continuous time record (sampling from an exponential)
+# TO BE REMOVED
 Rbdm <- function(N0, alphas, K=100, d0=0, b=1, m=0.1){
     J <- length(N0)
     if(length(K)==1) K <- rep(K,J)
@@ -15,24 +15,8 @@ Rbdm <- function(N0, alphas, K=100, d0=0, b=1, m=0.1){
     return(N0)
 }
 
-#' Helper functions
-#' 
-#' Generates migration rates from a log-series metacommunity
-#' @param J size of metacommunity
-#' @param alpha Fisher's alpha
-#' @param m per species migration rate
-#' @export
-#' @import sads
-ls.m <- function(J, alpha, m){
-    ## expected number of species
-    S <- ceiling(alpha*log(1+J/alpha))
-    ## Sampling S abundances from a logseries
-    N <- qls(runif(S), N=J, alpha=alpha)
-    ## Migration rates are wheighted by the abundances in the community
-    return(m*N/sum(N))
-}
 
-
+### TO BE REMOVED
 #' Running many times
 #' 
 #' @param con connectance of the interaction matrix

@@ -108,3 +108,21 @@ bdm <- function(count=1, progress="text") {
 ##' @rdname Community
 ##' @export
 #"time"
+
+#' Helper functions
+#' 
+#' Generates migration rates from a log-series metacommunity
+#' @param J size of metacommunity
+#' @param alpha Fisher's alpha
+#' @param m per species migration rate
+#' @export
+#' @import sads
+ls.m <- function(J, alpha, m){
+    ## expected number of species
+    S <- ceiling(alpha*log(1+J/alpha))
+    ## Sampling S abundances from a logseries
+    N <- qls(runif(S), N=J, alpha=alpha)
+    ## Migration rates are wheighted by the abundances in the community
+    return(m*N/sum(N))
+}
+
