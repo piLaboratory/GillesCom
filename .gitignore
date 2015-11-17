@@ -1,4 +1,2 @@
-src/RcppExports.cpp
 *.o
 *.so
-other/profile
