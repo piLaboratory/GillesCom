@@ -37,6 +37,7 @@ Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 
   if (length(abundance) == 0) stop ("Please provide an abundance vector or a positive number of species")
   J <- length(abundance)
   if(missing(interaction)) interaction <- Interaction(J)
+  if(save.int <= 0) stop("Save interval must be strictly positive")
   if(J > 100000) stop("Maximum number of species reached!")
   if (class(interaction) != "matrix") stop("Interaction must be a matrix!")
   if (length(K)==1) K <- rep(K, J)

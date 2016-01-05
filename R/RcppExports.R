@@ -5,6 +5,10 @@ create_community <- function(abundance, interaction, K, d0, b, m, save_int) {
     invisible(.Call('GillesCom_create_community', PACKAGE = 'GillesCom', abundance, interaction, K, d0, b, m, save_int))
 }
 
+load_community <- function(abundance, history, interaction, K, d0, b, m, time, save_int) {
+    invisible(.Call('GillesCom_load_community', PACKAGE = 'GillesCom', abundance, history, interaction, K, d0, b, m, time, save_int))
+}
+
 abundance <- function() {
     .Call('GillesCom_abundance', PACKAGE = 'GillesCom')
 }

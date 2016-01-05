@@ -22,6 +22,24 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// load_community
+void load_community(arma::vec abundance, arma::mat history, arma::mat interaction, arma::vec K, arma::vec d0, arma::vec b, arma::vec m, double time, double save_int);
+RcppExport SEXP GillesCom_load_community(SEXP abundanceSEXP, SEXP historySEXP, SEXP interactionSEXP, SEXP KSEXP, SEXP d0SEXP, SEXP bSEXP, SEXP mSEXP, SEXP timeSEXP, SEXP save_intSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< arma::vec >::type abundance(abundanceSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type history(historySEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type interaction(interactionSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type K(KSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type d0(d0SEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type b(bSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type m(mSEXP);
+    Rcpp::traits::input_parameter< double >::type time(timeSEXP);
+    Rcpp::traits::input_parameter< double >::type save_int(save_intSEXP);
+    load_community(abundance, history, interaction, K, d0, b, m, time, save_int);
+    return R_NilValue;
+END_RCPP
+}
 // abundance
 arma::vec abundance();
 RcppExport SEXP GillesCom_abundance() {
