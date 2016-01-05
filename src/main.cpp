@@ -42,9 +42,14 @@ class Community {
     double time, oldtime, save_int;
   public:
     arma::vec get_abundance() const {return abundance;}
+    arma::vec get_d0() const {return d0;}
+    arma::vec get_b() const {return b;}
+    arma::vec get_m() const {return m;}
     arma::vec get_K() const {return K;}
     arma::mat get_history() const {return history;}
+    arma::mat get_interaction() const {return interaction;}
     double get_time() const {return time;}
+    double get_save_int() const {return save_int;}
     Community(arma::vec _abundance, arma::mat _interaction,
         arma::vec _K, arma::vec _d0, arma::vec _b,
         arma::vec _m, double _save_int) {
@@ -94,6 +99,8 @@ void create_community(arma::vec abundance, arma::mat interaction,
   C = new Community(abundance, interaction, K, d0, b, m, save_int);
 }
 
+
+
 //[[Rcpp::export]]
 arma::vec abundance() {
   if (C==NULL) return arma::vec(1, arma::fill::zeros);
@@ -105,11 +112,37 @@ arma::vec K() {
   if (C==NULL) return arma::vec(1, arma::fill::zeros);
   return C->get_K();
 }
+//[[Rcpp::export]]
+arma::vec d0() {
+  if (C==NULL) return arma::vec(1, arma::fill::zeros);
+  return C->get_d0();
+}
+//[[Rcpp::export]]
+arma::vec birth() {
+  if (C==NULL) return arma::vec(1, arma::fill::zeros);
+  return C->get_b();
+}
+//[[Rcpp::export]]
+arma::vec migration() {
+  if (C==NULL) return arma::vec(1, arma::fill::zeros);
+  return C->get_m();
+}
 
 //[[Rcpp::export]]
 double time() {
   if (C==NULL) return 0;
   return C->get_time();
+}
+//[[Rcpp::export]]
+double save_int() {
+  if (C==NULL) return 0;
+  return C->get_save_int();
+}
+
+//[[Rcpp::export]]
+arma::mat interaction() {
+  if (C==NULL) return arma::mat(1, 1, arma::fill::zeros);
+  return C->get_interaction();
 }
 
 //[[Rcpp::export]]

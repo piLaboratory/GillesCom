@@ -100,14 +100,14 @@ bdm <- function(count=1, progress="text") {
   if(progress=="text") cat ("\n") 
 }
 
-##' Function \code{abundance} returns the current abundance vector for the community.
-##' @rdname Community
-##' @export
+## Function \code{abundance} returns the current abundance vector for the community.
+## @rdname Community
+## @export
 #"abundance"
 #
-##' Function \code{time} returns the current simulation time for the community.
-##' @rdname Community
-##' @export
+## Function \code{time} returns the current simulation time for the community.
+## @rdname Community
+## @export
 #"time"
 
 #' Helper functions

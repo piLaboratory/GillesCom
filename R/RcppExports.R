@@ -13,8 +13,28 @@ K <- function() {
     .Call('GillesCom_K', PACKAGE = 'GillesCom')
 }
 
+d0 <- function() {
+    .Call('GillesCom_d0', PACKAGE = 'GillesCom')
+}
+
+birth <- function() {
+    .Call('GillesCom_birth', PACKAGE = 'GillesCom')
+}
+
+migration <- function() {
+    .Call('GillesCom_migration', PACKAGE = 'GillesCom')
+}
+
 time <- function() {
     .Call('GillesCom_time', PACKAGE = 'GillesCom')
+}
+
+save_int <- function() {
+    .Call('GillesCom_save_int', PACKAGE = 'GillesCom')
+}
+
+interaction <- function() {
+    .Call('GillesCom_interaction', PACKAGE = 'GillesCom')
 }
 
 history <- function() {

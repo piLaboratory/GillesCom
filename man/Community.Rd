@@ -8,7 +8,7 @@
 Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
   save.int = 1)
 
-bdm(count, progress = "text")
+bdm(count = 1, progress = "text")
 }
 \arguments{
 \item{abundance}{vector of initial abundances of species in the community (set species not present to zero). For convenience, a single number is expanded as \code{rep(1,N)} (this also happens with parameters K, d0, b and m).}

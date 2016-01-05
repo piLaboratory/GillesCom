@@ -42,6 +42,36 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// d0
+arma::vec d0();
+RcppExport SEXP GillesCom_d0() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(d0());
+    return __result;
+END_RCPP
+}
+// birth
+arma::vec birth();
+RcppExport SEXP GillesCom_birth() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(birth());
+    return __result;
+END_RCPP
+}
+// migration
+arma::vec migration();
+RcppExport SEXP GillesCom_migration() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(migration());
+    return __result;
+END_RCPP
+}
 // time
 double time();
 RcppExport SEXP GillesCom_time() {
@@ -49,6 +79,26 @@ BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     __result = Rcpp::wrap(time());
+    return __result;
+END_RCPP
+}
+// save_int
+double save_int();
+RcppExport SEXP GillesCom_save_int() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(save_int());
+    return __result;
+END_RCPP
+}
+// interaction
+arma::mat interaction();
+RcppExport SEXP GillesCom_interaction() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(interaction());
     return __result;
 END_RCPP
 }
