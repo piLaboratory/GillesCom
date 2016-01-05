@@ -116,6 +116,11 @@ time()
 dim(history())
 @
 
+Please note that the result from \code{abundance} is \emph{not} the same as the last line 
+in \code{history}. This is because the lines in \code{history} is recorded whenever
+the clock reaches a designated interval (by default, every unit of time), while \code{abundance}
+gives the abundance at precisely the instant given by \code{time}.
+
 Some diagnostic plots may be generated with:
 <<diagPlot, fig=TRUE>>=
 diagPlots()

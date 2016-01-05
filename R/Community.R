@@ -34,6 +34,7 @@
 Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0, save.int = 1) {
   # Error checking, etc
   if (length(abundance)==1) abundance <- rep(1, abundance)
+  if (length(abundance) == 0) stop ("Please provide an abundance vector or a positive number of species")
   J <- length(abundance)
   if(missing(interaction)) interaction <- Interaction(J)
   if(J > 100000) stop("Maximum number of species reached!")
