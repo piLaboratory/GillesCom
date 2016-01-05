@@ -2,6 +2,8 @@
 
 # R functions 
 export(Init_Community, Interaction, diagPlots, ls.m, ones, radOverTime, octavOverTime)
+# File functions
+export(GillesComToFile, GillesComFromFile)
 # Rcpp functions 
 export(bdm, abundance, time, history)
 # Imports IN ORDER
