@@ -2,6 +2,8 @@
 #' @import sads
 #' @export
 diagPlots <- function(which=1:4) {
+    opar <- par(no.readonly=TRUE)
+    on.exit(par(opar))
   if (length(which) > 2)
     par(mfrow=c(2,2))
   else if (length(which) > 1)
@@ -59,9 +61,9 @@ radOverTime <- function(steps) {
   if(now < steps) stop("Not enough simulated data for this number of steps, check history()")
   tinc <- floor(now / steps)
   ab <- as.numeric(abundance())
-  plot(0, type='n', log="y", xlab="Species Rank", ylab="Species Abundance", xlim=c(0, J), ylim=c(1, max(h)))
+  plot(1, type='n', log="y", xlab="Species Rank", ylab="Species Abundance", xlim=c(0, J), ylim=c(1, max(h)))
   for (i in 1:steps) {
-    lines(rad(h[i * tinc, ]), col=palette[i])
+    if(sum(h[i*tinc,]) >0) lines(rad(h[i * tinc, ]), col=palette[i])
   }
   lines(rad(ab), type='l', col='blue4', lwd=2)
 }
@@ -85,7 +87,7 @@ octavOverTime <- function(steps, prop=TRUE) {
   tinc <- floor(now / steps)
   ab <- as.numeric(abundance())
   for (i in 1:steps) {
-    lines(octav(h[i * tinc, ]), col=palette[i], prop=prop, type='l')
+    if(sum(h[i*tinc,])>0) lines(octav(h[i * tinc, ]), col=palette[i], prop=prop, type='l')
   }
   lines(octav(as.numeric(abundance())), col="blue4", prop=prop, lwd=1.5)
   x <- octav(as.numeric(abundance()))

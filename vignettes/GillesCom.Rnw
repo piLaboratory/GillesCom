@@ -129,6 +129,34 @@ diagPlots()
 Notice that the x-axis on the plots is given by units of simulated time, \emph{NOT} cycles.
 It should be clear from this graphics that the simulated community is far from equilibrium.
 
+There are currently two plots that help to visualize the evolution of the community over time:
+\code{radOverTime} and \code{octavOverTime}. Both draw lines representing the radplot and the
+octavplot of the community as time progresses, with lighter lines representing older
+times, and darker lines representing more modern times. A blue line is superimposed, representing
+the current community:
+
+<<radOverTime, fig=TRUE>>=
+radOverTime()
+@
+<<octavOverTime, fig=TRUE>>=
+octavOverTime()
+@
+
+\section{File persistence}
+
+It may be helpful to save the simulation state to disk, in order to carry out analyses later
+or in other computer. To save all relevant information to the simulation, you can use the
+\code{GillesComToFile} function, and to load a file saved by this function, use \code{GillesComFromFile}.
+
+The saving function stores the status of the random number generator, to allow for reproducible
+simulations; however, the loading function cannot automatically restore this status. It does, however,
+return an invisible vector containing the random seed. In order to restore the simulation with
+the same random number generator state, use the following (without the preceding hashtag):
+
+<<load>>=
+# .Random.seed <- GillesComFromFile("data.rda")
+@
+
 \section{Bugs and issues}
 \label{sec:bugs-issues}
 
