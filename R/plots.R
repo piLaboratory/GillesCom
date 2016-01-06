@@ -1,6 +1,20 @@
-#' Functions to be tested
+#' Plotting functions
+#'
+#' These functions plot relevant information about a simulation
+#' 
+#' The function \code{diagPlots} plots up to four different diagnostic plots (controlled by the
+#' parameter "which":
+#' 1 - Species richness over time
+#' 2 - Total individuals over time
+#' 3 - Estimated Fisher's alpha over time (from a log-series fit)
+#' 4 - Estimated sdlog over time (from a lognormal fit)
+#'
+#' The functions \code{radOverTime} and \code{octavOverTime} provide a superimposing plot
+#' with the rad and octav, respectively, at distinct points in time.
 #' @import sads
+#' @rdname plots
 #' @export
+#' @param which numerical, may be a single number or a vector: which plots should be done (see Details)
 diagPlots <- function(which=1:4) {
     opar <- par(no.readonly=TRUE)
     on.exit(par(opar))
@@ -49,7 +63,8 @@ get.sdlog <- function (r) {
 }
 
 #' @import grDevices
-# TODO: documentation
+#' @rdname plots
+#' @param steps number of intervals in which to cut the history
 # TODO: input parameters
 radOverTime <- function(steps) {
   if (missing(steps)) steps <- time() 
@@ -70,6 +85,8 @@ radOverTime <- function(steps) {
 
 
 # Same annotation as above
+#' @rdname plots
+#' @param prop Logical. Should the octav be plotted using proportions (as opposed to absolute numbers)?
 octavOverTime <- function(steps, prop=TRUE) {
   dots <- list() # TODO
   if (missing(steps)) steps <- time() 

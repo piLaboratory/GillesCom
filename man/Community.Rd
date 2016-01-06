@@ -2,13 +2,22 @@
 % Please edit documentation in R/Community.R
 \name{Init_Community}
 \alias{Init_Community}
+\alias{abundance}
 \alias{bdm}
+\alias{history}
+\alias{time}
 \title{Community}
 \usage{
 Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
   save.int = 1)
 
 bdm(count = 1, progress = "text")
+
+abundance()
+
+time()
+
+history()
 }
 \arguments{
 \item{abundance}{vector of initial abundances of species in the community (set species not present to zero). For convenience, a single number is expanded as \code{rep(1,N)} (this also happens with parameters K, d0, b and m).}
@@ -35,6 +44,13 @@ initializes a simulation.
 
 Function \code{bdm} runs one interaction of a Gillespie Algorithm of birth death and migration process in
 a system of generalized Lotka-Volterra system of competing species
+
+Function \code{abundance} returns the current abundance vector for the community.
+
+Function \code{time} returns the current simulation time for the community.
+
+Function \code{history} returns a data frame in which each line corresponds to the species abundance
+distribution at a different time.
 }
 \details{
 Because of the way the interaction with the underlying c++ code is implemented, only one

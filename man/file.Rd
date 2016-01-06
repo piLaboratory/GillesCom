@@ -9,6 +9,9 @@ GillesComToFile(file = "GillesCom.rda")
 
 GillesComFromFile(file = "GillesCom.rda")
 }
+\arguments{
+\item{file}{filename to which save / from which load the data}
+}
 \description{
 Functions to save and load simulated data from the disk
 }

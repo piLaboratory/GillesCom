@@ -151,10 +151,10 @@ or in other computer. To save all relevant information to the simulation, you ca
 The saving function stores the status of the random number generator, to allow for reproducible
 simulations; however, the loading function cannot automatically restore this status. It does, however,
 return an invisible vector containing the random seed. In order to restore the simulation with
-the same random number generator state, use the following (without the preceding hashtag):
+the same random number generator state, use the following:
 
-<<load>>=
-# .Random.seed <- GillesComFromFile("data.rda")
+<<load, eval = FALSE>>=
+.Random.seed <- GillesComFromFile("data.rda")
 @
 
 \section{Bugs and issues}

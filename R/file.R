@@ -17,6 +17,7 @@
 #' simulation with the saved key, use ".Random.seed <- GillesComFromFile()".
 #' @export
 #' @rdname file
+#' @param file filename to which save / from which load the data
 GillesComToFile <- function(file="GillesCom.rda") {
     save_int = save_int()
     # Checking save_int (as it cannot be set zero)
@@ -39,6 +40,8 @@ GillesComToFile <- function(file="GillesCom.rda") {
 #' @export
 #' @rdname file
 GillesComFromFile <- function(file="GillesCom.rda") {
+    # to avoid NOTEs at R check:
+    compat <- NULL; seed <- NULL;
     load(file=file)
     cat("File loaded. Size:", format.h(file.info(file)$size), "\nSimulation date/time:", format.Date(date),"\n")
     if (compat != .COMPAT) warning("NOTE: Incompatible file type!\nExpected ", .COMPAT, ", got ", compat)
