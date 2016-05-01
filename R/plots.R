@@ -6,8 +6,10 @@
 #' parameter "which":
 #' 1 - Species richness over time
 #' 2 - Total individuals over time
-#' 3 - Estimated Fisher's alpha over time (from a log-series fit)
-#' 4 - Estimated sdlog over time (from a lognormal fit)
+#' 3 - Number of species equivalents calculated from Shannon information index
+#' 4 - Kolmogorov-Smirnoff statistic between SADs at each time compared to the SAD at the last time
+#' 5 - Estimated Fisher's alpha over time (from a log-series fit)
+#' 6 - Estimated sdlog over time (from a lognormal fit)
 #'
 #' The functions \code{radOverTime} and \code{octavOverTime} provide a superimposing plot
 #' with the rad and octav, respectively, at distinct points in time.
@@ -18,7 +20,9 @@
 diagPlots <- function(which=1:4) {
     opar <- par(no.readonly=TRUE)
     on.exit(par(opar))
-  if (length(which) > 2)
+  if (length(which) > 4)
+    par(mfrow=c(2,3))
+  else if (length(which) > 2)
     par(mfrow=c(2,2))
   else if (length(which) > 1)
     par(mfrow=c(1,2))
@@ -37,12 +41,24 @@ diagPlots <- function(which=1:4) {
     print(summary(my.N))
   }
   if(3 %in% which) {
+    my.H <- apply(history(), 1, get.Heq)
+    plot(my.H, type='l', main="Shannon's species equivalent", xlab="Time", ylab="")
+    cat("Shannon's species equivalent:\n")
+    print(summary(my.H))
+  }
+  if(4 %in% which) {
+    my.D <- get.ks(history())
+    plot(ks ~ tempo, data=my.D , type='l', main="KS distance to final SAD", xlab="Time", ylab="")
+    cat("Ks distance to final SAD:\n")
+    print(summary(my.D$ks))
+  }
+  if(5 %in% which) {
     my.alpha <- apply(history(), 1, get.alpha)
     plot(my.alpha, type='l', main="Fisher's alpha", xlab="Time", ylab="")
     cat("Fisher's alpha:\n")
     print(summary(my.alpha))
   }
-  if(4 %in% which) {
+  if(6 %in% which) {
     my.sdlog <- apply(history(), 1, get.sdlog)
     plot(my.sdlog, type='l', main="Log-normal sd", xlab="Time", ylab="")
     cat("Log-normal sd:\n")
@@ -61,6 +77,25 @@ get.sdlog <- function (r) {
   a <- tryCatch({f <- sads::fitlnorm(r); return(bbmle::coef(f)[2]);}, error=function(x) return(NA));
   return(a)
 }
+## Shannon's species equivalents
+get.Heq <- function(r){
+    r <- as.numeric(r[r>0])
+    rp <- r/sum(r)
+    a <- sum(-rp*log(rp))
+    return(exp(a))
+}
+## Kolmogorov-Smirnoff distance from the sad at the highest time
+get.ks <- function(m, lag=1){
+    tempo <- seq(1,nrow(m), by=lag)
+    kst <- c()
+    ksp <- c()
+    for(i in 1:(length(tempo)-1)){
+        teste <- ks.test(m[tempo[i],], m[nrow(m),])
+        kst[i] <- teste$statistic
+        ksp[i] <- teste$p.value
+    }
+    data.frame(tempo=tempo[1:length(tempo)-1], ks=kst, ksp=ksp)
+}
 
 #' @import grDevices
 #' @rdname plots
@@ -73,10 +108,11 @@ radOverTime <- function(steps) {
   h <- history()
   now <- dim(h)[1]
   J <- dim(h)[2]
+  Jmax <- max(apply(h, 1, function(x) sum(x>0)))
   if(now < steps) stop("Not enough simulated data for this number of steps, check history()")
   tinc <- floor(now / steps)
   ab <- as.numeric(abundance())
-  plot(1, type='n', log="y", xlab="Species Rank", ylab="Species Abundance", xlim=c(0, J), ylim=c(1, max(h)))
+  plot(1, type='n', log="y", xlab="Species Rank", ylab="Species Abundance", xlim=c(0,Jmax), ylim=c(1, max(h)))
   for (i in 1:steps) {
     if(sum(h[i*tinc,]) >0) lines(rad(h[i * tinc, ]), col=palette[i])
   }
