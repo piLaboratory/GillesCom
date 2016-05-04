@@ -140,8 +140,8 @@ ls.m <- function(J, S, alpha, m){
     else
         S <- ceiling(alpha*log(1+J/alpha))
     ## Sampling S abundances from a logseries
-    N <- qls(runif(S), N=J, alpha=alpha) #change to rls when sads 0.3 ie released
+    N <- qls(runif(S), N=J, alpha=alpha) #change to rls when sads 0.3 is released
     ## Migration rates are wheighted by the abundances in the community
-    return(m=m*N/sum(N))
+    return(list(m=m*N/sum(N), N = N, alpha = alpha))
 }
 
