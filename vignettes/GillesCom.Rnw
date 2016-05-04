@@ -62,7 +62,8 @@ assume that all individuals have the same probability of migration, so that the 
 is from species $i$ is directly proportional to the abundance of species $i$ in the regional pool. 
 
 The function \code{ls.m} can be used to generate the migration rates of several species from a logseries 
-metacommunity of size $J$, with a given Fisher's alpha and a per species migration rate of $m$:
+metacommunity of of expected \footnote{This function generates $S$ values of abundances from a logseries distribution. Therefore the total number of individuals in the simulated metacommunity varies among runs of \code{ls.m}, but has an expected value of $J$} size $J$ and $S$ species  with a given Fisher's alpha and a per species migration rate of $m$:
+
 <<migration>>=
 migration <- ls.m(J = 1e6, alpha = 50, m = 1)
 (N <- length(migration))
