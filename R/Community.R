@@ -120,17 +120,28 @@ bdm <- function(count=1, progress="text") {
 #' Helper functions
 #' 
 #' Generates migration rates from a log-series metacommunity
-#' @param J size of metacommunity
-#' @param alpha Fisher's alpha
+#' @param J expected size of metacommunity (total number of individuals)
+#' @param S Expected number of species in the metacommunity
+#' @param alpha Fisher's alpha of the metacommunity
 #' @param m per species migration rate
 #' @export
 #' @import sads
-ls.m <- function(J, alpha, m){
+ls.m <- function(J, S, alpha, m){
+    if(missing(alpha)&missing(S))
+        stop("Please provide alpha or S")
+    ## Fisher's alpha
+    if(!missing(S)){
+        f1 <- function(a){ S + a * log((a/(a + J))) }
+        sol <- uniroot(f1, interval = c(1/J, J))
+        alpha <- sol$root
+        warning(paste("alpha = ", alpha, " calculated from S and J"))
+    }
     ## expected number of species
-    S <- ceiling(alpha*log(1+J/alpha))
+    else
+        S <- ceiling(alpha*log(1+J/alpha))
     ## Sampling S abundances from a logseries
-    N <- qls(runif(S), N=J, alpha=alpha)
+    N <- qls(runif(S), N=J, alpha=alpha) #change to rls when sads 0.3 ie released
     ## Migration rates are wheighted by the abundances in the community
-    return(m*N/sum(N))
+    return(m=m*N/sum(N))
 }
 
