@@ -119,7 +119,9 @@ bdm <- function(count=1, progress="text") {
 
 #' Helper functions
 #' 
-#' Generates migration rates from a log-series metacommunity
+#' Generates migration rates from a log-series metacommunity. The user is expected
+#' to provide either S or alpha, but not both.
+#'
 #' @param J expected size of metacommunity (total number of individuals)
 #' @param S Expected number of species in the metacommunity
 #' @param alpha Fisher's alpha of the metacommunity
