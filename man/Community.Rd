@@ -28,7 +28,8 @@ history()
 
 \item{b}{birth rates (constant)}
 
-\item{m}{per capita migration rate in the metacommunity}
+\item{m}{per capita migration rate in the metacommunity. May be the given as the 
+resulting list of the \code{\link{ls.m}} function}
 
 \item{d0}{death rate when N=0}
 

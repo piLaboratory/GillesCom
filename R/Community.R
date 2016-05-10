@@ -11,7 +11,8 @@
 #' @param K carrying capacities of each species
 #' @param d0 death rate when N=0
 #' @param b birth rates (constant)
-#' @param m per capita migration rate in the metacommunity
+#' @param m per capita migration rate in the metacommunity. May be the given as the 
+#' resulting list of the \code{\link{ls.m}} function
 #' @param save.int History saving interval (in simulated time units)
 #' @examples
 #' # Initializes the community (in a global object)
@@ -40,6 +41,8 @@ Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 
   if(save.int <= 0) stop("Save interval must be strictly positive")
   if(J > 100000) stop("Maximum number of species reached!")
   if (class(interaction) != "matrix") stop("Interaction must be a matrix!")
+  # Helper for using results from ls.m
+  if (class(m) == "list" & "m" %in% names(m)) m = m$m 
   if (length(K)==1) K <- rep(K, J)
   if (length(d0)==1) d0 <- rep(d0, J)
   if (length(b)==1) b <- rep(b, J)
