@@ -11,6 +11,8 @@
 #' 5 - Estimated Fisher's alpha over time (from a log-series fit)
 #' 6 - Estimated sdlog over time (from a lognormal fit)
 #'
+#' Notice that the default invocation of this function displays only the plots 1 to 4.
+#'
 #' The functions \code{radOverTime} and \code{octavOverTime} provide a superimposing plot
 #' with the rad and octav, respectively, at distinct points in time.
 #' @import sads

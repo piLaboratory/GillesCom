@@ -23,7 +23,7 @@
 \author{Paulo In\'acio Prado and Andre Chalom \\ Theoretical Ecology Lab \\ LAGE at the Dep of Ecology, USP, Brazil \\ 
   \url{http://ecologia.ib.usp.br/let/} \\ \url{prado@ib.usp.br}}
 
-\date{November, 08, 2015}
+\date{May, 10, 2016}
 
 \maketitle
 
@@ -34,6 +34,10 @@ set.seed(42)
 @ %def 
 
 \section{Introduction}
+
+This package supposes some familiarity with the package ``sads'', available on CRAN, by the same authors plus 
+Miranda, M., and with the concepts related to Species Abundance Distributions. 
+
 
 %%% TODO
 
