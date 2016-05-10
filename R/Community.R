@@ -119,7 +119,9 @@ bdm <- function(count=1, progress="text") {
 
 #' Helper functions
 #' 
-#' Generates migration rates from a log-series metacommunity
+#' Generates migration rates from a log-series metacommunity. The user is expected
+#' to provide either S or alpha, but not both.
+#'
 #' @param J expected size of metacommunity (total number of individuals)
 #' @param S Expected number of species in the metacommunity
 #' @param alpha Fisher's alpha of the metacommunity
@@ -140,8 +142,8 @@ ls.m <- function(J, S, alpha, m){
     else
         S <- ceiling(alpha*log(1+J/alpha))
     ## Sampling S abundances from a logseries
-    N <- qls(runif(S), N=J, alpha=alpha) #change to rls when sads 0.3 ie released
+    N <- qls(runif(S), N=J, alpha=alpha) #change to rls when sads 0.3 is released
     ## Migration rates are wheighted by the abundances in the community
-    return(m=m*N/sum(N))
+    return(list(m=m*N/sum(N), N = N, alpha = alpha))
 }
 
