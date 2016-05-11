@@ -134,12 +134,27 @@ octavOverTime <- function(steps, prop=TRUE) {
   h <- history()
   now <- dim(h)[1]
   maxO <- ceiling(max(log2(history()))+1)
+  tinc <- floor(now / steps)
+  # Finds the maximum scale for y
+  maxY = 0
+  for (i in 1:steps) {
+    if(sum(h[i*tinc,])>0) {
+        o <- octav(h[i * tinc, ])
+        if (prop) newy = max(o$Freq)/sum(o$Freq)
+        else newy = max(o$Freq)
+        if (newy > maxY) maxY = newy
+    }
+  }
+  o <- octav(as.numeric(abundance()))
+  if (prop) newy = max(o$Freq)/sum(o$Freq)
+  else newy = max(o$Freq)
+  if (newy > maxY) maxY = newy
+
   J <- dim(h)[2]
   if(now < steps) stop("Not enough simulated data for this number of steps, check history()")
   if(!"ylab" %in% names(dots)) dots$ylab = "Proportion of species"
   if(!"xlab" %in% names(dots)) dots$xlab = "Abundance class"
-  do.call(plot, c(list(x=0, axes=FALSE, type='n', xlim=c(-0.5, maxO), ylim=c(0,1)),dots))
-  tinc <- floor(now / steps)
+  do.call(plot, c(list(x=0, axes=FALSE, type='n', xlim=c(-0.5, maxO), ylim=c(0,maxY)),dots))
   ab <- as.numeric(abundance())
   for (i in 1:steps) {
     if(sum(h[i*tinc,])>0) lines(octav(h[i * tinc, ]), col=palette[i], prop=prop, type='l')
