@@ -118,7 +118,7 @@ current status of the simulation, the following functions are useful:
 ab <- as.numeric(abundance())
 ab[ab > 0]
 # Simulation internal time elapsed
-time()
+elapsed_time()
 # `History` saves a line for each time period elapsed (starting with 0):
 dim(history())
 @
@@ -126,7 +126,7 @@ dim(history())
 Please note that the result from \code{abundance} is \emph{not} the same as the last line 
 in \code{history}. This is because the lines in \code{history} is recorded whenever
 the clock reaches a designated interval (by default, every unit of time), while \code{abundance}
-gives the abundance at precisely the instant given by \code{time}.
+gives the abundance at precisely the instant given by \code{elapsed\_time}.
 
 Some diagnostic plots may be generated with:
 <<diagPlot, fig=TRUE>>=

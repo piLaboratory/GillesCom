@@ -108,7 +108,7 @@ get.ks <- function(m, lag=1){
 radOverTime <- function(steps, col=c("gray90", "gray10", "blue4"), par.axis=list(), ...) {
     dots <- list(...)
     if (length(col) != 3) stop ("The col argument must have exactly three elements; see help")
-    if (missing(steps)) steps <- time() 
+    if (missing(steps)) steps <- elapsed_time() 
     palette <- grDevices::colorRampPalette(c(col[1], col[2]))(steps)
   palette <- grDevices::adjustcolor(palette, alpha.f=0.5)
   h <- history()
@@ -135,7 +135,7 @@ radOverTime <- function(steps, col=c("gray90", "gray10", "blue4"), par.axis=list
 octavOverTime <- function(steps, prop=TRUE, col=c("gray90", "gray10", "blue4"), par.axis=list(), ...) {
   dots <- list(...) 
   if (length(col) != 3) stop ("The col argument must have exactly three elements; see help")
-  if (missing(steps)) steps <- time() 
+  if (missing(steps)) steps <- elapsed_time() 
   palette <- grDevices::colorRampPalette(c(col[1], col[2]))(steps)
   palette <- grDevices::adjustcolor(palette, alpha.f=0.5)
   h <- history()

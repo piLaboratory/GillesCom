@@ -90,13 +90,13 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// time
-double time();
-RcppExport SEXP GillesCom_time() {
+// elapsed_time
+double elapsed_time();
+RcppExport SEXP GillesCom_elapsed_time() {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    __result = Rcpp::wrap(time());
+    __result = Rcpp::wrap(elapsed_time());
     return __result;
 END_RCPP
 }

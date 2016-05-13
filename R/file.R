@@ -32,7 +32,7 @@ GillesComToFile <- function(file="GillesCom.rda") {
     d0 = d0()
     birth = birth()
     migration = migration()
-    time = time()
+    time = elapsed_time()
     save(compat, seed, date, abundance, history, interaction, K, d0, birth, migration, time, save_int, file=file)
     cat("File saved. Size:", format.h(file.info(file)$size), "\n")
 }

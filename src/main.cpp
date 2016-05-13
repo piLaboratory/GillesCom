@@ -147,7 +147,7 @@ arma::vec migration() {
 }
 
 //[[Rcpp::export]]
-double time() {
+double elapsed_time() {
   if (C==NULL) return 0;
   return C->get_time();
 }

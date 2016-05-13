@@ -29,8 +29,8 @@ migration <- function() {
     .Call('GillesCom_migration', PACKAGE = 'GillesCom')
 }
 
-time <- function() {
-    .Call('GillesCom_time', PACKAGE = 'GillesCom')
+elapsed_time <- function() {
+    .Call('GillesCom_elapsed_time', PACKAGE = 'GillesCom')
 }
 
 save_int <- function() {

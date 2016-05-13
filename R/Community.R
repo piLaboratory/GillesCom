@@ -25,7 +25,7 @@
 #' f <- sads::fitlnorm(ab[ab>0])
 #' plot(f, which=1)
 #' # Simulation internal time elapsed
-#' time()
+#' elapsed_time()
 #' # History saves a line for each time period elapsed (starting with 0):
 #' dim(history())
 #' @export
@@ -109,10 +109,10 @@ bdm <- function(count=1, progress="text") {
 #' @export
 "abundance"
 
-#' Function \code{time} returns the current simulation time for the community.
+#' Function \code{elapsed_time} returns the current simulation time for the community.
 #' @rdname Community
 #' @export
-"time"
+"elapsed_time"
 
 #' Function \code{history} returns a data frame in which each line corresponds to the species abundance
 #' distribution at a different time.

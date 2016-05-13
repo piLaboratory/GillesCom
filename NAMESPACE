@@ -5,7 +5,7 @@ export(Init_Community, Interaction, diagPlots, ls.m, ones, radOverTime, octavOve
 # File functions
 export(GillesComToFile, GillesComFromFile)
 # Rcpp functions 
-export(bdm, abundance, time, history)
+export(bdm, abundance, elapsed_time, history)
 # Imports IN ORDER
 import(graphics)
 import(grDevices)

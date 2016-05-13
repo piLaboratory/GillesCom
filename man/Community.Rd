@@ -4,8 +4,8 @@
 \alias{Init_Community}
 \alias{abundance}
 \alias{bdm}
+\alias{elapsed_time}
 \alias{history}
-\alias{time}
 \title{Community}
 \usage{
 Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
@@ -15,7 +15,7 @@ bdm(count = 1, progress = "text")
 
 abundance()
 
-time()
+elapsed_time()
 
 history()
 }
@@ -48,7 +48,7 @@ a system of generalized Lotka-Volterra system of competing species
 
 Function \code{abundance} returns the current abundance vector for the community.
 
-Function \code{time} returns the current simulation time for the community.
+Function \code{elapsed_time} returns the current simulation time for the community.
 
 Function \code{history} returns a data frame in which each line corresponds to the species abundance
 distribution at a different time.
@@ -69,7 +69,7 @@ require(sads)
 f <- sads::fitlnorm(ab[ab>0])
 plot(f, which=1)
 # Simulation internal time elapsed
-time()
+elapsed_time()
 # History saves a line for each time period elapsed (starting with 0):
 dim(history())
 }
