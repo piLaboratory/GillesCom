@@ -8,8 +8,8 @@
 \alias{trajectories}
 \title{Community}
 \usage{
-Init_Community(abundance, interaction_matrix, K = 1000, b = 1, m = 0.1,
-  d0 = 0, save.int = 1)
+Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
+  save.int = 1)
 
 bdm(count = 1, progress = "text")
 
@@ -22,14 +22,14 @@ trajectories()
 \arguments{
 \item{abundance}{vector of initial abundances of species in the community (set species not present to zero). For convenience, a single number is expanded as \code{rep(1,N)} (this also happens with parameters K, d0, b and m).}
 
-\item{interaction_matrix}{matrix of interaction coefficients, see \code{\link{interaction}}.}
+\item{interaction}{matrix of interaction coefficients, see \code{\link{interaction}}.}
 
 \item{K}{carrying capacities of each species}
 
 \item{b}{birth rates (constant)}
 
 \item{m}{per capita migration rate in the metacommunity. May be the given as the 
-resulting list of the \code{\link{ls.m}} function}
+resulting list of the \code{\link{ls_migration}} function}
 
 \item{d0}{death rate when N=0}
 

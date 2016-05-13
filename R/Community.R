@@ -7,12 +7,12 @@
 #' community may be simulated at a time. Calling \code{Init_Community} more than once will
 #' overwrite the previous simulation objects!
 #' @param abundance vector of initial abundances of species in the community (set species not present to zero). For convenience, a single number is expanded as \code{rep(1,N)} (this also happens with parameters K, d0, b and m).
-#' @param interaction_matrix matrix of interaction coefficients, see \code{\link{interaction}}.
+#' @param interaction matrix of interaction coefficients, see \code{\link{interaction}}.
 #' @param K carrying capacities of each species
 #' @param d0 death rate when N=0
 #' @param b birth rates (constant)
 #' @param m per capita migration rate in the metacommunity. May be the given as the 
-#' resulting list of the \code{\link{ls.m}} function
+#' resulting list of the \code{\link{ls_migration}} function
 #' @param save.int History saving interval (in simulated time units)
 #' @examples
 #' # Initializes the community (in a global object)
@@ -32,39 +32,39 @@
 #' @import graphics
 #' @useDynLib GillesCom
 #' @rdname Community
-Init_Community <- function(abundance, interaction_matrix, K = 1000, b = 1, m = 0.1, d0 = 0, save.int = 1) {
+Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0, save.int = 1) {
   # Error checking, etc
   if (length(abundance)==1) abundance <- rep(0, abundance)
   if (length(abundance) == 0) stop ("Please provide an abundance vector or a positive number of species")
   J <- length(abundance)
-  if(missing(interaction_matrix)) interaction_matrix <- interaction(J)
+  if(missing(interaction)) interaction <- interaction_matrix(J)
   if(save.int <= 0) stop("Save interval must be strictly positive")
   if(J > 100000) stop("Maximum number of species reached!")
-  if (class(interaction_matrix) != "matrix") stop("interaction_matrix must be a matrix!")
-  # Helper for using results from ls.m
+  if (class(interaction) != "matrix") stop("interaction must be a matrix!")
+  # Helper for using results from ls_migration
   if (class(m) == "list" & "m" %in% names(m)) m = m$m 
   if (length(K)==1) K <- rep(K, J)
   if (length(d0)==1) d0 <- rep(d0, J)
   if (length(b)==1) b <- rep(b, J)
   if (length(m)==1) m <- rep(m, J)
   if (any(abundance < 0)) stop ("Abundances must be positive integers or zero")
-  if (length(K) != J || length(d0) != J || length(b) != J || length(m) != J || dim(interaction_matrix) != c(J,J))
+  if (length(K) != J || length(d0) != J || length(b) != J || length(m) != J || dim(interaction) != c(J,J))
      stop("All objects must have the same dimension as the abundance vector")
-  create_community(abundance, interaction_matrix, K, d0, b, m, save.int)
+  create_community(abundance, interaction, K, d0, b, m, save.int)
 }
 
 #' Interaction matrix
 #' 
-#' The function \code{interaction} generates a Lotka-Volterra interaction matrix, following May. For a 
+#' The function \code{interaction_matrix} generates a Lotka-Volterra interaction matrix, following May. For a 
 #' Caswell matrix, use \code{diag(J)}, and for a Hubbell matrix, use \code{ones(J)}.
 #'
 #' @param J size of metacommunity
 #' @param con connectance of the interaction matrix. Defaults to 1 (totally connected)
-#' @param stren strength of interaction matrix, which is the standard deviation of the Gaussin from which the values are drawn
+#' @param stren strength of interaction matrix, which is the standard deviation of the Gaussian from which the values are drawn
 #' @param comp Logical. Use \code{TRUE} for a competition only matrix (all entries are positive); \code{FALSE} for otherwise
 #' @export
 #' @import stats
-interaction <- function(J, stren = 0.1, con = 1, comp = TRUE) {
+interaction_matrix <- function(J, stren = 0.1, con = 1, comp = TRUE) {
   alphas <- matrix(rnorm(J*J,sd=stren), ncol=J)
   if(comp) alphas <- abs(alphas)
   diag(alphas) <- 1
@@ -81,7 +81,7 @@ interaction <- function(J, stren = 0.1, con = 1, comp = TRUE) {
 }
 
 #' @export
-#' @rdname interaction
+#' @rdname interaction_matrix
 ones <- function(J) matrix(rep(1, J*J), ncol=J)
 
 #' Function \code{bdm} runs one interaction of a Gillespie Algorithm of birth death and migration process in 
@@ -131,7 +131,7 @@ bdm <- function(count=1, progress="text") {
 #' @param m per species migration rate
 #' @export
 #' @import sads
-ls.m <- function(J, S, alpha, m){
+ls_migration <- function(J, S, alpha, m){
     if(missing(alpha)&missing(S))
         stop("Please provide alpha or S")
     ## Fisher's alpha
