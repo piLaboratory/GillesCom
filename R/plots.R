@@ -30,38 +30,38 @@ diagPlots <- function(which=1:4) {
     par(mfrow=c(1,2))
   if(1 %in% which) {
     S <- function(r) sum(r>0)
-    my.S <- apply(history(), 1, S)
+    my.S <- apply(trajectories(), 1, S)
     plot(my.S, type='l', main="Species richness", xlab="Time", ylab="")
     cat("Species:\n")
     print(summary(my.S))
   }
   if(2 %in% which) {
-    my.N <- apply(history(), 1, sum)
+    my.N <- apply(trajectories(), 1, sum)
     plot(my.N, type='l', main="Total individuals", xlab="Time", ylab="")
     abline(h=sum(K()), lty=2, lwd=0.8) #Can we estimate the expected number of individuals from K and alpha??
     cat("Individuals:\n")
     print(summary(my.N))
   }
   if(3 %in% which) {
-    my.H <- apply(history(), 1, get.Heq)
+    my.H <- apply(trajectories(), 1, get.Heq)
     plot(my.H, type='l', main="Shannon's species equivalent", xlab="Time", ylab="")
     cat("Shannon's species equivalent:\n")
     print(summary(my.H))
   }
   if(4 %in% which) {
-    my.D <- get.ks(history())
+    my.D <- get.ks(trajectories())
     plot(ks ~ tempo, data=my.D , type='l', main="KS distance to final SAD", xlab="Time", ylab="")
     cat("Ks distance to final SAD:\n")
     print(summary(my.D$ks))
   }
   if(5 %in% which) {
-    my.alpha <- apply(history(), 1, get.alpha)
+    my.alpha <- apply(trajectories(), 1, get.alpha)
     plot(my.alpha, type='l', main="Fisher's alpha", xlab="Time", ylab="")
     cat("Fisher's alpha:\n")
     print(summary(my.alpha))
   }
   if(6 %in% which) {
-    my.sdlog <- apply(history(), 1, get.sdlog)
+    my.sdlog <- apply(trajectories(), 1, get.sdlog)
     plot(my.sdlog, type='l', main="Log-normal sd", xlab="Time", ylab="")
     cat("Log-normal sd:\n")
     print(summary(my.sdlog))
@@ -101,7 +101,7 @@ get.ks <- function(m, lag=1){
 
 #' @import grDevices
 #' @rdname plots
-#' @param steps number of intervals in which to cut the history
+#' @param steps number of intervals in which to cut the trajectories
 #' @param col For both \code{radOverTime} and \code{octavOverTime}, the colors are chosen by three values: [1] the color of the most ancestral rad/octav, [2] the color of the latest rad/octav and [3] a highlight color for the current rad/octav. The colors for the remaining rad/octavs to be plotted are generated with a ramp palette from col[1] to col[2].
 #' @param par.axis Additional graphical parameters for handling the axes of the plot.
 #' @param \dots Additional graphical parameters for the plots, such as main title, labels, font size, etc; EXCEPT for the axis.
@@ -111,11 +111,11 @@ radOverTime <- function(steps, col=c("gray90", "gray10", "blue4"), par.axis=list
     if (missing(steps)) steps <- elapsed_time() 
     palette <- grDevices::colorRampPalette(c(col[1], col[2]))(steps)
   palette <- grDevices::adjustcolor(palette, alpha.f=0.5)
-  h <- history()
+  h <- trajectories()
   now <- dim(h)[1]
   J <- dim(h)[2]
   Jmax <- max(apply(h, 1, function(x) sum(x>0)))
-  if(now < steps) stop("Not enough simulated data for this number of steps, check history()")
+  if(now < steps) stop("Not enough simulated data for this number of steps, check trajectories()")
   tinc <- floor(now / steps)
   ab <- as.numeric(abundance())
   if(!"main" %in% names(dots)) dots$main = "Simulated rank abundances over time"
@@ -138,9 +138,9 @@ octavOverTime <- function(steps, prop=TRUE, col=c("gray90", "gray10", "blue4"), 
   if (missing(steps)) steps <- elapsed_time() 
   palette <- grDevices::colorRampPalette(c(col[1], col[2]))(steps)
   palette <- grDevices::adjustcolor(palette, alpha.f=0.5)
-  h <- history()
+  h <- trajectories()
   now <- dim(h)[1]
-  maxO <- ceiling(max(log2(history()))+1)
+  maxO <- ceiling(max(log2(trajectories()))+1)
   tinc <- floor(now / steps)
   # Finds the maximum scale for y
   maxY = 0
@@ -158,7 +158,7 @@ octavOverTime <- function(steps, prop=TRUE, col=c("gray90", "gray10", "blue4"), 
   if (newy > maxY) maxY = newy
 
   J <- dim(h)[2]
-  if(now < steps) stop("Not enough simulated data for this number of steps, check history()")
+  if(now < steps) stop("Not enough simulated data for this number of steps, check trajectories()")
   if(!"main" %in% names(dots)) dots$main = "Simulated octaves over time"
   if(!"ylab" %in% names(dots) & prop) dots$ylab = "Proportion of species"
   if(!"ylab" %in% names(dots) & !prop) dots$ylab = "Number of species"

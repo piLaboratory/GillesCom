@@ -24,8 +24,8 @@ class Community {
   private:
     // abundance vector: counts how many individuals from each species
     arma::vec abundance;
-    // history matrix: one row for the abundances at each specified time
-    arma::mat history;
+    // trajectories matrix: one row for the abundances at each specified time
+    arma::mat trajectories;
     // interaction matrix
     arma::mat interaction;
     // support capacity
@@ -38,7 +38,7 @@ class Community {
     arma::vec b;
     // migration rate
     arma::vec m;
-    // current time, last time and history saving interval
+    // current time, last time and trajectories saving interval
     double time, save_int;
   public:
     arma::vec get_abundance() const {return abundance;}
@@ -46,17 +46,17 @@ class Community {
     arma::vec get_b() const {return b;}
     arma::vec get_m() const {return m;}
     arma::vec get_K() const {return K;}
-    arma::mat get_history() const {return history;}
+    arma::mat get_trajectories() const {return trajectories;}
     arma::mat get_interaction() const {return interaction;}
     double get_time() const {return time;}
     double get_save_int() const {return save_int;}
     // overloaded constructor for restoring a saved sim
     // TODO: collapse both constructors, as we really don't need two!
-    Community(arma::vec _abundance, arma::mat _history, arma::mat _interaction,
+    Community(arma::vec _abundance, arma::mat _trajectories, arma::mat _interaction,
         arma::vec _K, arma::vec _d0, arma::vec _b,
         arma::vec _m, double _time, double _save_int) {
       abundance = _abundance;
-      history = _history;
+      trajectories = _trajectories;
       interaction = _interaction;
       K = _K; d0 = _d0; b = _b; m = _m;
       time  = _time; save_int = _save_int;
@@ -66,14 +66,14 @@ class Community {
         arma::vec _K, arma::vec _d0, arma::vec _b,
         arma::vec _m, double _save_int) {
       abundance = _abundance;
-      history = abundance.t();
+      trajectories = abundance.t();
       interaction = _interaction;
       K = _K; d0 = _d0; b = _b; m = _m;
       time  = 0; save_int = _save_int;
       dslope = (b-d0)/K; //slope of the density-dependent linear relation of death rate to N
     }
     void saveHistory() {
-      history.insert_rows(history.n_rows, abundance.t());
+      trajectories.insert_rows(trajectories.n_rows, abundance.t());
     }
     void bdm() {
       // % performs element-wise multiplication
@@ -92,7 +92,7 @@ class Community {
       // advances the simulation clock
       double elapsed = R::rexp(1.0 / sum(w));
       if (elapsed > save_int) warning("Time elapsed larger than save interval!");
-      // only saves history if we have completed a saving period
+      // only saves trajectories if we have completed a saving period
       if (((int) (time / save_int)) !=  ((int) ((time+elapsed)/save_int)))
         saveHistory();
       time += elapsed;
@@ -112,11 +112,11 @@ void create_community(arma::vec abundance, arma::mat interaction,
 }
 
 // [[Rcpp::export]]
-void load_community(arma::vec abundance, arma::mat history, arma::mat interaction,
+void load_community(arma::vec abundance, arma::mat trajectories, arma::mat interaction,
         arma::vec K, arma::vec d0, arma::vec b,
         arma::vec m, double time, double save_int) {
   if (C!=NULL) warning("Warning: overwriting previous Community");
-  C = new Community(abundance, history, interaction, K, d0, b, m, time, save_int);
+  C = new Community(abundance, trajectories, interaction, K, d0, b, m, time, save_int);
 }
 
 //[[Rcpp::export]]
@@ -164,9 +164,9 @@ arma::mat interaction() {
 }
 
 //[[Rcpp::export]]
-arma::mat history() {
+arma::mat trajectories() {
   if (C==NULL) return arma::mat(1, 1, arma::fill::zeros);
-  return C->get_history();
+  return C->get_trajectories();
 }
 
 //[[Rcpp::export]]

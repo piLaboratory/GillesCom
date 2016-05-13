@@ -5,7 +5,7 @@
 \alias{abundance}
 \alias{bdm}
 \alias{elapsed_time}
-\alias{history}
+\alias{trajectories}
 \title{Community}
 \usage{
 Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
@@ -17,7 +17,7 @@ abundance()
 
 elapsed_time()
 
-history()
+trajectories()
 }
 \arguments{
 \item{abundance}{vector of initial abundances of species in the community (set species not present to zero). For convenience, a single number is expanded as \code{rep(1,N)} (this also happens with parameters K, d0, b and m).}
@@ -50,7 +50,7 @@ Function \code{abundance} returns the current abundance vector for the community
 
 Function \code{elapsed_time} returns the current simulation time for the community.
 
-Function \code{history} returns a data frame in which each line corresponds to the species abundance
+Function \code{trajectories} returns a data frame in which each line corresponds to the species abundance
 distribution at a different time.
 }
 \details{
@@ -71,6 +71,6 @@ plot(f, which=1)
 # Simulation internal time elapsed
 elapsed_time()
 # History saves a line for each time period elapsed (starting with 0):
-dim(history())
+dim(trajectories())
 }
 

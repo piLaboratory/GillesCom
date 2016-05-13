@@ -27,7 +27,7 @@
 #' # Simulation internal time elapsed
 #' elapsed_time()
 #' # History saves a line for each time period elapsed (starting with 0):
-#' dim(history())
+#' dim(trajectories())
 #' @export
 #' @import graphics
 #' @useDynLib GillesCom
@@ -114,11 +114,11 @@ bdm <- function(count=1, progress="text") {
 #' @export
 "elapsed_time"
 
-#' Function \code{history} returns a data frame in which each line corresponds to the species abundance
+#' Function \code{trajectories} returns a data frame in which each line corresponds to the species abundance
 #' distribution at a different time.
 #' @rdname Community
 #' @export
-"history"
+"trajectories"
 
 #' Helper functions
 #' 

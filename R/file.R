@@ -26,14 +26,14 @@ GillesComToFile <- function(file="GillesCom.rda") {
     compat = .COMPAT
     seed = .Random.seed # Must be GLOBALLY assigned to restore the seed generator
     date = Sys.time()
-    history = history()
+    trajectories = trajectories()
     interaction = interaction()
     K = K()
     d0 = d0()
     birth = birth()
     migration = migration()
     time = elapsed_time()
-    save(compat, seed, date, abundance, history, interaction, K, d0, birth, migration, time, save_int, file=file)
+    save(compat, seed, date, abundance, trajectories, interaction, K, d0, birth, migration, time, save_int, file=file)
     cat("File saved. Size:", format.h(file.info(file)$size), "\n")
 }
 
@@ -45,7 +45,7 @@ GillesComFromFile <- function(file="GillesCom.rda") {
     load(file=file)
     cat("File loaded. Size:", format.h(file.info(file)$size), "\nSimulation date/time:", format.Date(date),"\n")
     if (compat != .COMPAT) warning("NOTE: Incompatible file type!\nExpected ", .COMPAT, ", got ", compat)
-    load_community(abundance, history, interaction, K, d0, birth, migration, time, save_int)
+    load_community(abundance, trajectories, interaction, K, d0, birth, migration, time, save_int)
     return(invisible(seed));
 }
 
