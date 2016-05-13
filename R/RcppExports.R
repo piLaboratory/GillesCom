@@ -37,8 +37,8 @@ save_int <- function() {
     .Call('GillesCom_save_int', PACKAGE = 'GillesCom')
 }
 
-interaction <- function() {
-    .Call('GillesCom_interaction', PACKAGE = 'GillesCom')
+get_interaction <- function() {
+    .Call('GillesCom_get_interaction', PACKAGE = 'GillesCom')
 }
 
 trajectories <- function() {

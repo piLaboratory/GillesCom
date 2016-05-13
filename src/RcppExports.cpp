@@ -110,13 +110,13 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// interaction
-arma::mat interaction();
-RcppExport SEXP GillesCom_interaction() {
+// get_interaction
+arma::mat get_interaction();
+RcppExport SEXP GillesCom_get_interaction() {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    __result = Rcpp::wrap(interaction());
+    __result = Rcpp::wrap(get_interaction());
     return __result;
 END_RCPP
 }

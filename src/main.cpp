@@ -158,7 +158,7 @@ double save_int() {
 }
 
 //[[Rcpp::export]]
-arma::mat interaction() {
+arma::mat get_interaction() {
   if (C==NULL) return arma::mat(1, 1, arma::fill::zeros);
   return C->get_interaction();
 }

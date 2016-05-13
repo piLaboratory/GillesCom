@@ -7,7 +7,7 @@
 #' community may be simulated at a time. Calling \code{Init_Community} more than once will
 #' overwrite the previous simulation objects!
 #' @param abundance vector of initial abundances of species in the community (set species not present to zero). For convenience, a single number is expanded as \code{rep(1,N)} (this also happens with parameters K, d0, b and m).
-#' @param interaction matrix of interaction coefficients, see \code{\link{Interaction}}.
+#' @param interaction_matrix matrix of interaction coefficients, see \code{\link{interaction}}.
 #' @param K carrying capacities of each species
 #' @param d0 death rate when N=0
 #' @param b birth rates (constant)
@@ -32,15 +32,15 @@
 #' @import graphics
 #' @useDynLib GillesCom
 #' @rdname Community
-Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0, save.int = 1) {
+Init_Community <- function(abundance, interaction_matrix, K = 1000, b = 1, m = 0.1, d0 = 0, save.int = 1) {
   # Error checking, etc
   if (length(abundance)==1) abundance <- rep(0, abundance)
   if (length(abundance) == 0) stop ("Please provide an abundance vector or a positive number of species")
   J <- length(abundance)
-  if(missing(interaction)) interaction <- Interaction(J)
+  if(missing(interaction_matrix)) interaction_matrix <- interaction(J)
   if(save.int <= 0) stop("Save interval must be strictly positive")
   if(J > 100000) stop("Maximum number of species reached!")
-  if (class(interaction) != "matrix") stop("Interaction must be a matrix!")
+  if (class(interaction_matrix) != "matrix") stop("interaction_matrix must be a matrix!")
   # Helper for using results from ls.m
   if (class(m) == "list" & "m" %in% names(m)) m = m$m 
   if (length(K)==1) K <- rep(K, J)
@@ -48,14 +48,14 @@ Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 
   if (length(b)==1) b <- rep(b, J)
   if (length(m)==1) m <- rep(m, J)
   if (any(abundance < 0)) stop ("Abundances must be positive integers or zero")
-  if (length(K) != J || length(d0) != J || length(b) != J || length(m) != J || dim(interaction) != c(J,J))
+  if (length(K) != J || length(d0) != J || length(b) != J || length(m) != J || dim(interaction_matrix) != c(J,J))
      stop("All objects must have the same dimension as the abundance vector")
-  create_community(abundance, interaction, K, d0, b, m, save.int)
+  create_community(abundance, interaction_matrix, K, d0, b, m, save.int)
 }
 
 #' Interaction matrix
 #' 
-#' \code{Interaction} generates a Lotka-Volterra interaction matrix, following May. For a 
+#' The function \code{interaction} generates a Lotka-Volterra interaction matrix, following May. For a 
 #' Caswell matrix, use \code{diag(J)}, and for a Hubbell matrix, use \code{ones(J)}.
 #'
 #' @param J size of metacommunity
@@ -64,7 +64,7 @@ Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 
 #' @param comp Logical. Use \code{TRUE} for a competition only matrix (all entries are positive); \code{FALSE} for otherwise
 #' @export
 #' @import stats
-Interaction <- function(J, stren = 0.1, con = 1, comp = TRUE) {
+interaction <- function(J, stren = 0.1, con = 1, comp = TRUE) {
   alphas <- matrix(rnorm(J*J,sd=stren), ncol=J)
   if(comp) alphas <- abs(alphas)
   diag(alphas) <- 1
@@ -81,7 +81,7 @@ Interaction <- function(J, stren = 0.1, con = 1, comp = TRUE) {
 }
 
 #' @export
-#' @rdname Interaction
+#' @rdname interaction
 ones <- function(J) matrix(rep(1, J*J), ncol=J)
 
 #' Function \code{bdm} runs one interaction of a Gillespie Algorithm of birth death and migration process in 

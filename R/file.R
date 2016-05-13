@@ -1,6 +1,6 @@
 # File compatibility version. MUST be updated whenever a package change might
 # render the previous saved files unusable.
-.COMPAT = "0.0.1-alpha1"
+.COMPAT = "0.0.2"
 
 #' File persistence of simulations
 #' 
@@ -27,7 +27,7 @@ GillesComToFile <- function(file="GillesCom.rda") {
     seed = .Random.seed # Must be GLOBALLY assigned to restore the seed generator
     date = Sys.time()
     trajectories = trajectories()
-    interaction = interaction()
+    interaction = get_interaction()
     K = K()
     d0 = d0()
     birth = birth()
