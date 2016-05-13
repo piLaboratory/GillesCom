@@ -102,10 +102,14 @@ get.ks <- function(m, lag=1){
 #' @import grDevices
 #' @rdname plots
 #' @param steps number of intervals in which to cut the history
-# TODO: input parameters
-radOverTime <- function(steps) {
-  if (missing(steps)) steps <- time() 
-  palette <- grDevices::colorRampPalette(c("gray90", "gray10"))(steps)
+#' @param col For both \code{radOverTime} and \code{octavOverTime}, the colors are chosen by three values: [1] the color of the most ancestral rad/octav, [2] the color of the latest rad/octav and [3] a highlight color for the current rad/octav. The colors for the remaining rad/octavs to be plotted are generated with a ramp palette from col[1] to col[2].
+#' @param par.axis Additional graphical parameters for handling the axes of the plot.
+#' @param \dots Additional graphical parameters for the plots, such as main title, labels, font size, etc; EXCEPT for the axis.
+radOverTime <- function(steps, col=c("gray90", "gray10", "blue4"), par.axis=list(), ...) {
+    dots <- list(...)
+    if (length(col) != 3) stop ("The col argument must have exactly three elements; see help")
+    if (missing(steps)) steps <- time() 
+    palette <- grDevices::colorRampPalette(c(col[1], col[2]))(steps)
   palette <- grDevices::adjustcolor(palette, alpha.f=0.5)
   h <- history()
   now <- dim(h)[1]
@@ -114,37 +118,57 @@ radOverTime <- function(steps) {
   if(now < steps) stop("Not enough simulated data for this number of steps, check history()")
   tinc <- floor(now / steps)
   ab <- as.numeric(abundance())
-  plot(1, type='n', log="y", xlab="Species Rank", ylab="Species Abundance", xlim=c(0,Jmax), ylim=c(1, max(h)))
+  if(!"main" %in% names(dots)) dots$main = "Simulated rank abundances over time"
+  if(!"ylab" %in% names(dots)) dots$ylab = "Species Abundance"
+  if(!"xlab" %in% names(dots)) dots$xlab = "Species Rank"
+  do.call(plot, c(list(x=1, type='n', axes=FALSE, log="y", xlim=c(0,Jmax), ylim=c(1, max(h))), dots))
+  do.call(axis, c(list(1), par.axis))
+  do.call(axis, c(list(2), par.axis))
   for (i in 1:steps) {
     if(sum(h[i*tinc,]) >0) lines(rad(h[i * tinc, ]), col=palette[i])
   }
-  lines(rad(ab), type='l', col='blue4', lwd=2)
+  lines(rad(ab), type='l', col=col[3], lwd=2)
 }
 
-
-# Same annotation as above
 #' @rdname plots
 #' @param prop Logical. Should the octav be plotted using proportions (as opposed to absolute numbers)?
-octavOverTime <- function(steps, prop=TRUE) {
-  dots <- list() # TODO
+octavOverTime <- function(steps, prop=TRUE, col=c("gray90", "gray10", "blue4"), par.axis=list(), ...) {
+  dots <- list(...) 
+  if (length(col) != 3) stop ("The col argument must have exactly three elements; see help")
   if (missing(steps)) steps <- time() 
-  par.axis <- list() # TODO
-  palette <- grDevices::colorRampPalette(c("gray90", "gray10"))(steps)
+  palette <- grDevices::colorRampPalette(c(col[1], col[2]))(steps)
   palette <- grDevices::adjustcolor(palette, alpha.f=0.5)
   h <- history()
   now <- dim(h)[1]
   maxO <- ceiling(max(log2(history()))+1)
+  tinc <- floor(now / steps)
+  # Finds the maximum scale for y
+  maxY = 0
+  for (i in 1:steps) {
+    if(sum(h[i*tinc,])>0) {
+        o <- octav(h[i * tinc, ])
+        if (prop) newy = max(o$Freq)/sum(o$Freq)
+        else newy = max(o$Freq)
+        if (newy > maxY) maxY = newy
+    }
+  }
+  o <- octav(as.numeric(abundance()))
+  if (prop) newy = max(o$Freq)/sum(o$Freq)
+  else newy = max(o$Freq)
+  if (newy > maxY) maxY = newy
+
   J <- dim(h)[2]
   if(now < steps) stop("Not enough simulated data for this number of steps, check history()")
-  if(!"ylab" %in% names(dots)) dots$ylab = "Proportion of species"
+  if(!"main" %in% names(dots)) dots$main = "Simulated octaves over time"
+  if(!"ylab" %in% names(dots) & prop) dots$ylab = "Proportion of species"
+  if(!"ylab" %in% names(dots) & !prop) dots$ylab = "Number of species"
   if(!"xlab" %in% names(dots)) dots$xlab = "Abundance class"
-  do.call(plot, c(list(x=0, axes=FALSE, type='n', xlim=c(-0.5, maxO), ylim=c(0,1)),dots))
-  tinc <- floor(now / steps)
+  do.call(plot, c(list(x=0, axes=FALSE, type='n', xlim=c(-0.5, maxO), ylim=c(0,maxY)),dots))
   ab <- as.numeric(abundance())
   for (i in 1:steps) {
     if(sum(h[i*tinc,])>0) lines(octav(h[i * tinc, ]), col=palette[i], prop=prop, type='l')
   }
-  lines(octav(as.numeric(abundance())), col="blue4", prop=prop, lwd=1.5)
+  lines(octav(as.numeric(abundance())), col=col[3], prop=prop, lwd=1.5)
   x <- octav(as.numeric(abundance()))
   xlab <- x[seq(1,length(x[,1]),2),2]
     n <- as.numeric(as.character(x[,1]))
