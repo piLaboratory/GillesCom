@@ -96,7 +96,7 @@ For performance reasons, this package works with a \emph{global} community objec
 active simulation at any given time. In order to initialize a community, use the function 
 \code{Init\_Community}. Notice that you don't need to assign this call to any object:
 <<Init>>=
-Init_Community(abundance=rep(0, N), interaction=random, b=1, m = migration$m)
+Init_Community(abundance=rep(0, N), interaction=random, b=1, m = migration)
 @
 
 The arguments $m$, $b$ and $d0$ of this function are expanded to vectors of the appropriate length, if
