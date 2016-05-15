@@ -8,16 +8,24 @@
 \usage{
 diagPlots(which = 1:4)
 
-radOverTime(steps)
+radOverTime(steps, col = c("gray90", "gray10", "blue4"), par.axis = list(),
+  ...)
 
-octavOverTime(steps, prop = TRUE)
+octavOverTime(steps, prop = TRUE, col = c("gray90", "gray10", "blue4"),
+  par.axis = list(), ...)
 }
 \arguments{
 \item{which}{numerical, may be a single number or a vector: which plots should be done (see Details)}
 
-\item{steps}{number of intervals in which to cut the history}
+\item{steps}{number of intervals in which to cut the trajectories}
+
+\item{col}{For both \code{radOverTime} and \code{octavOverTime}, the colors are chosen by three values: [1] the color of the most ancestral rad/octav, [2] the color of the latest rad/octav and [3] a highlight color for the current rad/octav. The colors for the remaining rad/octavs to be plotted are generated with a ramp palette from col[1] to col[2].}
+
+\item{par.axis}{Additional graphical parameters for handling the axes of the plot.}
 
 \item{prop}{Logical. Should the octav be plotted using proportions (as opposed to absolute numbers)?}
+
+\item{\dots}{Additional graphical parameters for the plots, such as main title, labels, font size, etc; EXCEPT for the axis.}
 }
 \description{
 These functions plot relevant information about a simulation
@@ -31,6 +39,8 @@ parameter "which":
 4 - Kolmogorov-Smirnoff statistic between SADs at each time compared to the SAD at the last time
 5 - Estimated Fisher's alpha over time (from a log-series fit)
 6 - Estimated sdlog over time (from a lognormal fit)
+
+Notice that the default invocation of this function displays only the plots 1 to 4.
 
 The functions \code{radOverTime} and \code{octavOverTime} provide a superimposing plot
 with the rad and octav, respectively, at distinct points in time.

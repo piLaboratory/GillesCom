@@ -11,6 +11,8 @@
 #' 5 - Estimated Fisher's alpha over time (from a log-series fit)
 #' 6 - Estimated sdlog over time (from a lognormal fit)
 #'
+#' Notice that the default invocation of this function displays only the plots 1 to 4.
+#'
 #' The functions \code{radOverTime} and \code{octavOverTime} provide a superimposing plot
 #' with the rad and octav, respectively, at distinct points in time.
 #' @import sads
@@ -28,38 +30,38 @@ diagPlots <- function(which=1:4) {
     par(mfrow=c(1,2))
   if(1 %in% which) {
     S <- function(r) sum(r>0)
-    my.S <- apply(history(), 1, S)
+    my.S <- apply(trajectories(), 1, S)
     plot(my.S, type='l', main="Species richness", xlab="Time", ylab="")
     cat("Species:\n")
     print(summary(my.S))
   }
   if(2 %in% which) {
-    my.N <- apply(history(), 1, sum)
+    my.N <- apply(trajectories(), 1, sum)
     plot(my.N, type='l', main="Total individuals", xlab="Time", ylab="")
     abline(h=sum(K()), lty=2, lwd=0.8) #Can we estimate the expected number of individuals from K and alpha??
     cat("Individuals:\n")
     print(summary(my.N))
   }
   if(3 %in% which) {
-    my.H <- apply(history(), 1, get.Heq)
+    my.H <- apply(trajectories(), 1, get.Heq)
     plot(my.H, type='l', main="Shannon's species equivalent", xlab="Time", ylab="")
     cat("Shannon's species equivalent:\n")
     print(summary(my.H))
   }
   if(4 %in% which) {
-    my.D <- get.ks(history())
+    my.D <- get.ks(trajectories())
     plot(ks ~ tempo, data=my.D , type='l', main="KS distance to final SAD", xlab="Time", ylab="")
     cat("Ks distance to final SAD:\n")
     print(summary(my.D$ks))
   }
   if(5 %in% which) {
-    my.alpha <- apply(history(), 1, get.alpha)
+    my.alpha <- apply(trajectories(), 1, get.alpha)
     plot(my.alpha, type='l', main="Fisher's alpha", xlab="Time", ylab="")
     cat("Fisher's alpha:\n")
     print(summary(my.alpha))
   }
   if(6 %in% which) {
-    my.sdlog <- apply(history(), 1, get.sdlog)
+    my.sdlog <- apply(trajectories(), 1, get.sdlog)
     plot(my.sdlog, type='l', main="Log-normal sd", xlab="Time", ylab="")
     cat("Log-normal sd:\n")
     print(summary(my.sdlog))
@@ -99,50 +101,74 @@ get.ks <- function(m, lag=1){
 
 #' @import grDevices
 #' @rdname plots
-#' @param steps number of intervals in which to cut the history
-# TODO: input parameters
-radOverTime <- function(steps) {
-  if (missing(steps)) steps <- time() 
-  palette <- grDevices::colorRampPalette(c("gray90", "gray10"))(steps)
+#' @param steps number of intervals in which to cut the trajectories
+#' @param col For both \code{radOverTime} and \code{octavOverTime}, the colors are chosen by three values: [1] the color of the most ancestral rad/octav, [2] the color of the latest rad/octav and [3] a highlight color for the current rad/octav. The colors for the remaining rad/octavs to be plotted are generated with a ramp palette from col[1] to col[2].
+#' @param par.axis Additional graphical parameters for handling the axes of the plot.
+#' @param \dots Additional graphical parameters for the plots, such as main title, labels, font size, etc; EXCEPT for the axis.
+radOverTime <- function(steps, col=c("gray90", "gray10", "blue4"), par.axis=list(), ...) {
+    dots <- list(...)
+    if (length(col) != 3) stop ("The col argument must have exactly three elements; see help")
+    if (missing(steps)) steps <- elapsed_time() 
+    palette <- grDevices::colorRampPalette(c(col[1], col[2]))(steps)
   palette <- grDevices::adjustcolor(palette, alpha.f=0.5)
-  h <- history()
+  h <- trajectories()
   now <- dim(h)[1]
   J <- dim(h)[2]
   Jmax <- max(apply(h, 1, function(x) sum(x>0)))
-  if(now < steps) stop("Not enough simulated data for this number of steps, check history()")
+  if(now < steps) stop("Not enough simulated data for this number of steps, check trajectories()")
   tinc <- floor(now / steps)
   ab <- as.numeric(abundance())
-  plot(1, type='n', log="y", xlab="Species Rank", ylab="Species Abundance", xlim=c(0,Jmax), ylim=c(1, max(h)))
+  if(!"main" %in% names(dots)) dots$main = "Simulated rank abundances over time"
+  if(!"ylab" %in% names(dots)) dots$ylab = "Species Abundance"
+  if(!"xlab" %in% names(dots)) dots$xlab = "Species Rank"
+  do.call(plot, c(list(x=1, type='n', axes=FALSE, log="y", xlim=c(0,Jmax), ylim=c(1, max(h))), dots))
+  do.call(axis, c(list(1), par.axis))
+  do.call(axis, c(list(2), par.axis))
   for (i in 1:steps) {
     if(sum(h[i*tinc,]) >0) lines(rad(h[i * tinc, ]), col=palette[i])
   }
-  lines(rad(ab), type='l', col='blue4', lwd=2)
+  lines(rad(ab), type='l', col=col[3], lwd=2)
 }
 
-
-# Same annotation as above
 #' @rdname plots
 #' @param prop Logical. Should the octav be plotted using proportions (as opposed to absolute numbers)?
-octavOverTime <- function(steps, prop=TRUE) {
-  dots <- list() # TODO
-  if (missing(steps)) steps <- time() 
-  par.axis <- list() # TODO
-  palette <- grDevices::colorRampPalette(c("gray90", "gray10"))(steps)
+octavOverTime <- function(steps, prop=TRUE, col=c("gray90", "gray10", "blue4"), par.axis=list(), ...) {
+  dots <- list(...) 
+  if (length(col) != 3) stop ("The col argument must have exactly three elements; see help")
+  if (missing(steps)) steps <- elapsed_time() 
+  palette <- grDevices::colorRampPalette(c(col[1], col[2]))(steps)
   palette <- grDevices::adjustcolor(palette, alpha.f=0.5)
-  h <- history()
+  h <- trajectories()
   now <- dim(h)[1]
-  maxO <- ceiling(max(log2(history()))+1)
-  J <- dim(h)[2]
-  if(now < steps) stop("Not enough simulated data for this number of steps, check history()")
-  if(!"ylab" %in% names(dots)) dots$ylab = "Proportion of species"
-  if(!"xlab" %in% names(dots)) dots$xlab = "Abundance class"
-  do.call(plot, c(list(x=0, axes=FALSE, type='n', xlim=c(-0.5, maxO), ylim=c(0,1)),dots))
+  maxO <- ceiling(max(log2(trajectories()))+1)
   tinc <- floor(now / steps)
+  # Finds the maximum scale for y
+  maxY = 0
+  for (i in 1:steps) {
+    if(sum(h[i*tinc,])>0) {
+        o <- octav(h[i * tinc, ])
+        if (prop) newy = max(o$Freq)/sum(o$Freq)
+        else newy = max(o$Freq)
+        if (newy > maxY) maxY = newy
+    }
+  }
+  o <- octav(as.numeric(abundance()))
+  if (prop) newy = max(o$Freq)/sum(o$Freq)
+  else newy = max(o$Freq)
+  if (newy > maxY) maxY = newy
+
+  J <- dim(h)[2]
+  if(now < steps) stop("Not enough simulated data for this number of steps, check trajectories()")
+  if(!"main" %in% names(dots)) dots$main = "Simulated octaves over time"
+  if(!"ylab" %in% names(dots) & prop) dots$ylab = "Proportion of species"
+  if(!"ylab" %in% names(dots) & !prop) dots$ylab = "Number of species"
+  if(!"xlab" %in% names(dots)) dots$xlab = "Abundance class"
+  do.call(plot, c(list(x=0, axes=FALSE, type='n', xlim=c(-0.5, maxO), ylim=c(0,maxY)),dots))
   ab <- as.numeric(abundance())
   for (i in 1:steps) {
     if(sum(h[i*tinc,])>0) lines(octav(h[i * tinc, ]), col=palette[i], prop=prop, type='l')
   }
-  lines(octav(as.numeric(abundance())), col="blue4", prop=prop, lwd=1.5)
+  lines(octav(as.numeric(abundance())), col=col[3], prop=prop, lwd=1.5)
   x <- octav(as.numeric(abundance()))
   xlab <- x[seq(1,length(x[,1]),2),2]
     n <- as.numeric(as.character(x[,1]))

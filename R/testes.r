@@ -1,6 +1,6 @@
 #source("bdm.R")
 ## Migration rates for each specie in the metacommunity
-#m.test <- ls.m(1e6, alpha=50, 1e-5)
+#m.test <- ls_migration(1e6, alpha=50, 1e-5)
 #run.bdm(N0=rep(c(1,0),c(1,length(m.test)-1)),
 #        K=1e4, b=0.1, m=m.test, con=1, stren=0.1, nrep=1e6, rec.step=1e4, file="teste.dat")
 ## Hubbell's neutral model

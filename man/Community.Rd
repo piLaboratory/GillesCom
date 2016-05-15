@@ -4,8 +4,8 @@
 \alias{Init_Community}
 \alias{abundance}
 \alias{bdm}
-\alias{history}
-\alias{time}
+\alias{elapsed_time}
+\alias{trajectories}
 \title{Community}
 \usage{
 Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
@@ -15,20 +15,21 @@ bdm(count = 1, progress = "text")
 
 abundance()
 
-time()
+elapsed_time()
 
-history()
+trajectories()
 }
 \arguments{
 \item{abundance}{vector of initial abundances of species in the community (set species not present to zero). For convenience, a single number is expanded as \code{rep(1,N)} (this also happens with parameters K, d0, b and m).}
 
-\item{interaction}{matrix of interaction coefficients, see \code{\link{Interaction}}.}
+\item{interaction}{matrix of interaction coefficients, see \code{\link{interaction}}.}
 
 \item{K}{carrying capacities of each species}
 
 \item{b}{birth rates (constant)}
 
-\item{m}{per capita migration rate in the metacommunity}
+\item{m}{per capita migration rate in the metacommunity. May be the given as the 
+resulting list of the \code{\link{ls_migration}} function}
 
 \item{d0}{death rate when N=0}
 
@@ -47,9 +48,9 @@ a system of generalized Lotka-Volterra system of competing species
 
 Function \code{abundance} returns the current abundance vector for the community.
 
-Function \code{time} returns the current simulation time for the community.
+Function \code{elapsed_time} returns the current simulation time for the community.
 
-Function \code{history} returns a data frame in which each line corresponds to the species abundance
+Function \code{trajectories} returns a data frame in which each line corresponds to the species abundance
 distribution at a different time.
 }
 \details{
@@ -68,8 +69,8 @@ require(sads)
 f <- sads::fitlnorm(ab[ab>0])
 plot(f, which=1)
 # Simulation internal time elapsed
-time()
+elapsed_time()
 # History saves a line for each time period elapsed (starting with 0):
-dim(history())
+dim(trajectories())
 }
 

@@ -23,12 +23,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // load_community
-void load_community(arma::vec abundance, arma::mat history, arma::mat interaction, arma::vec K, arma::vec d0, arma::vec b, arma::vec m, double time, double save_int);
-RcppExport SEXP GillesCom_load_community(SEXP abundanceSEXP, SEXP historySEXP, SEXP interactionSEXP, SEXP KSEXP, SEXP d0SEXP, SEXP bSEXP, SEXP mSEXP, SEXP timeSEXP, SEXP save_intSEXP) {
+void load_community(arma::vec abundance, arma::mat trajectories, arma::mat interaction, arma::vec K, arma::vec d0, arma::vec b, arma::vec m, double time, double save_int);
+RcppExport SEXP GillesCom_load_community(SEXP abundanceSEXP, SEXP trajectoriesSEXP, SEXP interactionSEXP, SEXP KSEXP, SEXP d0SEXP, SEXP bSEXP, SEXP mSEXP, SEXP timeSEXP, SEXP save_intSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< arma::vec >::type abundance(abundanceSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type history(historySEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type trajectories(trajectoriesSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type interaction(interactionSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type K(KSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type d0(d0SEXP);
@@ -36,7 +36,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec >::type m(mSEXP);
     Rcpp::traits::input_parameter< double >::type time(timeSEXP);
     Rcpp::traits::input_parameter< double >::type save_int(save_intSEXP);
-    load_community(abundance, history, interaction, K, d0, b, m, time, save_int);
+    load_community(abundance, trajectories, interaction, K, d0, b, m, time, save_int);
     return R_NilValue;
 END_RCPP
 }
@@ -90,13 +90,13 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// time
-double time();
-RcppExport SEXP GillesCom_time() {
+// elapsed_time
+double elapsed_time();
+RcppExport SEXP GillesCom_elapsed_time() {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    __result = Rcpp::wrap(time());
+    __result = Rcpp::wrap(elapsed_time());
     return __result;
 END_RCPP
 }
@@ -110,23 +110,23 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// interaction
-arma::mat interaction();
-RcppExport SEXP GillesCom_interaction() {
+// get_interaction
+arma::mat get_interaction();
+RcppExport SEXP GillesCom_get_interaction() {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    __result = Rcpp::wrap(interaction());
+    __result = Rcpp::wrap(get_interaction());
     return __result;
 END_RCPP
 }
-// history
-arma::mat history();
-RcppExport SEXP GillesCom_history() {
+// trajectories
+arma::mat trajectories();
+RcppExport SEXP GillesCom_trajectories() {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    __result = Rcpp::wrap(history());
+    __result = Rcpp::wrap(trajectories());
     return __result;
 END_RCPP
 }
