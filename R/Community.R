@@ -55,18 +55,29 @@ Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 
 
 #' Interaction matrix
 #' 
-#' The function \code{interaction_matrix} generates a Lotka-Volterra interaction matrix, following May. For a 
+#' The function \code{interaction_matrix} generates a Lotka-Volterra interaction matrix, following May
+#' with interaction coefficients drawn from a Normal or a Gamma distribution. For a 
 #' Caswell matrix, use \code{diag(J)}, and for a Hubbell matrix, use \code{ones(J)}.
 #'
 #' @param J size of metacommunity
 #' @param con connectance of the interaction matrix. Defaults to 1 (totally connected)
-#' @param stren strength of interaction matrix, which is the standard deviation of the Gaussian from which the values are drawn
-#' @param comp Logical. Use \code{TRUE} for a competition only matrix (all entries are positive); \code{FALSE} for otherwise
+#' @param stren strength of interaction matrix, which is the standard deviation of the distribution from which the values are drawn
+#' @param comp Logical. Use \code{TRUE} for a competition only matrix (all entries are positive); \code{FALSE} for otherwise. Ignored with Gamma distribution.
+#' @param distr character, the names of the distribution to draw the interaction coefficients.
+#' @param meanInter the mean value of interspecific competition coefficients for Gamma distribution.
+#' @note Coefficients drawn from the Gamma distribution are always positive numbers (implying only competion).
+#' In this case the mean value of the interspecific competition coefficients can be set with the argument 'meanInter'.
+#' The intra-species coefficients are always set to one.
 #' @export
 #' @import stats
-interaction_matrix <- function(J, stren = 0.1, con = 1, comp = TRUE) {
-  alphas <- matrix(rnorm(J*J,sd=stren), ncol=J)
-  if(comp) alphas <- abs(alphas)
+interaction_matrix <- function(J, stren = 0.1, con = 1, comp = TRUE, distr = c("normal", "gamma"), meanInter = 1) {
+    distr <- match.arg(distr)
+    if(distr=="normal"){
+        alphas <- matrix(rnorm(J*J, sd=stren), ncol=J)
+        if(comp) alphas <- abs(alphas)
+        }
+    if(distr=="gamma")
+        alphas <- matrix(rgamma(J*J, scale = stren^2, shape = stren^(-2)), ncol=J) * meanInter
   diag(alphas) <- 1
   if(con<1){
     indexes <- expand.grid(1:J,1:J)
