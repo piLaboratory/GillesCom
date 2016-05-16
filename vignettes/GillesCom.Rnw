@@ -178,6 +178,6 @@ The package project is hosted on GitHub (\url{https://github.com/piLaboratory/Gi
 Please report bugs and issues and give us your feedback at 
 \url{https://github.com/piLaboratory/GillesCom/issues}.
 
-%%%\bibliographystyle{apalike}
-%%%\bibliography{GillesCom}
+\bibliographystyle{apalike}
+\bibliography{GillesCom}
 \end{document}

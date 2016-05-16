@@ -5,7 +5,7 @@ export(Init_Community, interaction_matrix, diagPlots, ls_migration, ones, radOve
 # File functions
 export(GillesComToFile, GillesComFromFile)
 # Rcpp functions 
-export(bdm, abundance, elapsed_time, trajectories)
+export(bdm, abundance, elapsed_time, elapsed_cycles, trajectories)
 # Imports IN ORDER
 import(graphics)
 import(grDevices)
