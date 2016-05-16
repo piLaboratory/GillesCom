@@ -5,8 +5,8 @@ create_community <- function(abundance, interaction, K, d0, b, m, save_int) {
     invisible(.Call('GillesCom_create_community', PACKAGE = 'GillesCom', abundance, interaction, K, d0, b, m, save_int))
 }
 
-load_community <- function(abundance, trajectories, interaction, K, d0, b, m, time, save_int) {
-    invisible(.Call('GillesCom_load_community', PACKAGE = 'GillesCom', abundance, trajectories, interaction, K, d0, b, m, time, save_int))
+load_community <- function(abundance, trajectories, interaction, K, d0, b, m, time, save_int, cycles) {
+    invisible(.Call('GillesCom_load_community', PACKAGE = 'GillesCom', abundance, trajectories, interaction, K, d0, b, m, time, save_int, cycles))
 }
 
 abundance <- function() {
@@ -31,6 +31,10 @@ migration <- function() {
 
 elapsed_time <- function() {
     .Call('GillesCom_elapsed_time', PACKAGE = 'GillesCom')
+}
+
+elapsed_cycles <- function() {
+    .Call('GillesCom_elapsed_cycles', PACKAGE = 'GillesCom')
 }
 
 save_int <- function() {

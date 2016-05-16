@@ -1,6 +1,6 @@
 # File compatibility version. MUST be updated whenever a package change might
 # render the previous saved files unusable.
-.COMPAT = "0.0.2"
+.COMPAT = "0.0.3"
 
 #' File persistence of simulations
 #' 
@@ -33,7 +33,8 @@ GillesComToFile <- function(file="GillesCom.rda") {
     birth = birth()
     migration = migration()
     time = elapsed_time()
-    save(compat, seed, date, abundance, trajectories, interaction, K, d0, birth, migration, time, save_int, file=file)
+    cycles = elapsed_cycles()
+    save(compat, seed, date, abundance, trajectories, interaction, K, d0, birth, migration, time, save_int, cycles, file=file)
     cat("File saved. Size:", format.h(file.info(file)$size), "\n")
 }
 
@@ -45,7 +46,7 @@ GillesComFromFile <- function(file="GillesCom.rda") {
     load(file=file)
     cat("File loaded. Size:", format.h(file.info(file)$size), "\nSimulation date/time:", format.Date(date),"\n")
     if (compat != .COMPAT) warning("NOTE: Incompatible file type!\nExpected ", .COMPAT, ", got ", compat)
-    load_community(abundance, trajectories, interaction, K, d0, birth, migration, time, save_int)
+    load_community(abundance, trajectories, interaction, K, d0, birth, migration, time, save_int, cycles)
     return(invisible(seed));
 }
 

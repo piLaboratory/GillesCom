@@ -23,8 +23,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // load_community
-void load_community(arma::vec abundance, arma::mat trajectories, arma::mat interaction, arma::vec K, arma::vec d0, arma::vec b, arma::vec m, double time, double save_int);
-RcppExport SEXP GillesCom_load_community(SEXP abundanceSEXP, SEXP trajectoriesSEXP, SEXP interactionSEXP, SEXP KSEXP, SEXP d0SEXP, SEXP bSEXP, SEXP mSEXP, SEXP timeSEXP, SEXP save_intSEXP) {
+void load_community(arma::vec abundance, arma::mat trajectories, arma::mat interaction, arma::vec K, arma::vec d0, arma::vec b, arma::vec m, double time, double save_int, int cycles);
+RcppExport SEXP GillesCom_load_community(SEXP abundanceSEXP, SEXP trajectoriesSEXP, SEXP interactionSEXP, SEXP KSEXP, SEXP d0SEXP, SEXP bSEXP, SEXP mSEXP, SEXP timeSEXP, SEXP save_intSEXP, SEXP cyclesSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< arma::vec >::type abundance(abundanceSEXP);
@@ -36,7 +36,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec >::type m(mSEXP);
     Rcpp::traits::input_parameter< double >::type time(timeSEXP);
     Rcpp::traits::input_parameter< double >::type save_int(save_intSEXP);
-    load_community(abundance, trajectories, interaction, K, d0, b, m, time, save_int);
+    Rcpp::traits::input_parameter< int >::type cycles(cyclesSEXP);
+    load_community(abundance, trajectories, interaction, K, d0, b, m, time, save_int, cycles);
     return R_NilValue;
 END_RCPP
 }
@@ -97,6 +98,16 @@ BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     __result = Rcpp::wrap(elapsed_time());
+    return __result;
+END_RCPP
+}
+// elapsed_cycles
+int elapsed_cycles();
+RcppExport SEXP GillesCom_elapsed_cycles() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(elapsed_cycles());
     return __result;
 END_RCPP
 }

@@ -141,6 +141,11 @@ bdm <- function(count, time, progress=c("text", "none")) {
 #' @export
 "elapsed_time"
 
+#' Function \code{elapsed_cycles} returns the number of elapsed simulation cycles.
+#' @rdname Community
+#' @export
+"elapsed_cycles"
+
 #' Function \code{trajectories} returns a data frame in which each line corresponds to the species abundance
 #' distribution at a different time.
 #' @rdname Community

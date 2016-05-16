@@ -40,6 +40,8 @@ class Community {
     arma::vec m;
     // current time, last time and trajectories saving interval
     double time, save_int;
+    // simulated cycles so far
+    int cycles;
   public:
     arma::vec get_abundance() const {return abundance;}
     arma::vec get_d0() const {return d0;}
@@ -49,17 +51,18 @@ class Community {
     arma::mat get_trajectories() const {return trajectories;}
     arma::mat get_interaction() const {return interaction;}
     double get_time() const {return time;}
+    double get_cycles() const {return cycles;}
     double get_save_int() const {return save_int;}
     // overloaded constructor for restoring a saved sim
     // TODO: collapse both constructors, as we really don't need two!
     Community(arma::vec _abundance, arma::mat _trajectories, arma::mat _interaction,
         arma::vec _K, arma::vec _d0, arma::vec _b,
-        arma::vec _m, double _time, double _save_int) {
+        arma::vec _m, double _time, double _save_int, int _cycles) {
       abundance = _abundance;
       trajectories = _trajectories;
       interaction = _interaction;
       K = _K; d0 = _d0; b = _b; m = _m;
-      time  = _time; save_int = _save_int;
+      time  = _time; save_int = _save_int; cycles = _cycles;
       dslope = (b-d0)/K; //slope of the density-dependent linear relation of death rate to N
     }
     Community(arma::vec _abundance, arma::mat _interaction,
@@ -69,7 +72,7 @@ class Community {
       trajectories = abundance.t();
       interaction = _interaction;
       K = _K; d0 = _d0; b = _b; m = _m;
-      time  = 0; save_int = _save_int;
+      time  = 0; cycles = 0; save_int = _save_int;
       dslope = (b-d0)/K; //slope of the density-dependent linear relation of death rate to N
     }
     void saveHistory() {
@@ -95,7 +98,7 @@ class Community {
       // only saves trajectories if we have completed a saving period
       if (((int) (time / save_int)) !=  ((int) ((time+elapsed)/save_int)))
         saveHistory();
-      time += elapsed;
+      time += elapsed; cycles += 1;
       return;
     }
 };
@@ -114,9 +117,9 @@ void create_community(arma::vec abundance, arma::mat interaction,
 // [[Rcpp::export]]
 void load_community(arma::vec abundance, arma::mat trajectories, arma::mat interaction,
         arma::vec K, arma::vec d0, arma::vec b,
-        arma::vec m, double time, double save_int) {
+        arma::vec m, double time, double save_int, int cycles) {
   if (C!=NULL) warning("Warning: overwriting previous Community");
-  C = new Community(abundance, trajectories, interaction, K, d0, b, m, time, save_int);
+  C = new Community(abundance, trajectories, interaction, K, d0, b, m, time, save_int, cycles);
 }
 
 //[[Rcpp::export]]
@@ -150,6 +153,11 @@ arma::vec migration() {
 double elapsed_time() {
   if (C==NULL) return 0;
   return C->get_time();
+}
+//[[Rcpp::export]]
+int elapsed_cycles() {
+  if (C==NULL) return 0;
+  return C->get_cycles();
 }
 //[[Rcpp::export]]
 double save_int() {
