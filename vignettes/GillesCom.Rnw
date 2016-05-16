@@ -90,6 +90,9 @@ random <- interaction_matrix(N, stren = 0.1, con=1)
 The additional parameters for function \code{interaction\_matrix} represent the strenght of the competition and 
 the connectivity of the interaction matrix.
 
+The interaction matrix may also be constructed using a Gamma distribution for generating the competition strenghts;
+see \cite{Kessler2015} for more details.
+
 \section{Initializing the community}
 
 For performance reasons, this package works with a \emph{global} community object, so there can be only one
