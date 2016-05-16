@@ -175,3 +175,10 @@ void Cbdm(int count = 1) {
   for (int i = 0; i < count; i ++)
     C->bdm();
 }
+
+//[[Rcpp::export]]
+void Tbdm(double time) {
+  if (C==NULL) return;
+  while (C->get_time() < time)
+    C->bdm();
+}

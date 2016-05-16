@@ -140,3 +140,13 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// Tbdm
+void Tbdm(double time);
+RcppExport SEXP GillesCom_Tbdm(SEXP timeSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< double >::type time(timeSEXP);
+    Tbdm(time);
+    return R_NilValue;
+END_RCPP
+}

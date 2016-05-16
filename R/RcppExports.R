@@ -49,3 +49,7 @@ Cbdm <- function(count = 1L) {
     invisible(.Call('GillesCom_Cbdm', PACKAGE = 'GillesCom', count))
 }
 
+Tbdm <- function(time) {
+    invisible(.Call('GillesCom_Tbdm', PACKAGE = 'GillesCom', time))
+}
+
