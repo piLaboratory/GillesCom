@@ -156,6 +156,24 @@ radOverTime()
 octavOverTime()
 @
 
+\section{Environmental stochasticity}
+
+The following lines of code generate a data frame with two columns, the first representing the time and the second representing a common multiplier for the birth rates of all species due to environmental stochasticity. With the parameters below, a typical run will be constrained in the 0.25 - 4 interval.
+
+<<stochasticity>>=
+Time <- 100; intervals <- 10000; sd = 0.01
+birth <- exp(cumsum(rnorm(intervals, sd=sd)))
+birth.df <- data.frame(time = seq(0, Time, length=intervals), birth)
+plot(birth.df, type='l')
+@
+
+Then, we generate a community under the effect of this sotchastic birth rate multiplier as:
+<<>>=
+Init_Community(50, stochastic=birth.df)
+bdm(time=50)
+diagPlots()
+@
+
 \section{File persistence}
 
 It may be helpful to save the simulation state to disk, in order to carry out analyses later

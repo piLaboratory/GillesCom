@@ -32,7 +32,8 @@
 #' @import graphics
 #' @useDynLib GillesCom
 #' @rdname Community
-Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0, save.int = 1) {
+Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0, save.int = 1, 
+                           stochastic = data.frame()) {
   # Error checking, etc
   if (length(abundance)==1) abundance <- rep(0, abundance)
   if (length(abundance) == 0) stop ("Please provide an abundance vector or a positive number of species")
@@ -50,7 +51,7 @@ Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 
   if (any(abundance < 0)) stop ("Abundances must be positive integers or zero")
   if (length(K) != J || length(d0) != J || length(b) != J || length(m) != J || dim(interaction) != c(J,J))
      stop("All objects must have the same dimension as the abundance vector")
-  create_community(abundance, interaction, K, d0, b, m, save.int)
+  create_community(abundance, interaction, K, d0, b, m, save.int, as.matrix(stochastic))
 }
 
 #' Interaction matrix

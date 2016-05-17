@@ -7,8 +7,8 @@
 using namespace Rcpp;
 
 // create_community
-void create_community(arma::vec abundance, arma::mat interaction, arma::vec K, arma::vec d0, arma::vec b, arma::vec m, double save_int);
-RcppExport SEXP GillesCom_create_community(SEXP abundanceSEXP, SEXP interactionSEXP, SEXP KSEXP, SEXP d0SEXP, SEXP bSEXP, SEXP mSEXP, SEXP save_intSEXP) {
+void create_community(arma::vec abundance, arma::mat interaction, arma::vec K, arma::vec d0, arma::vec b, arma::vec m, double save_int, arma::mat stochastic);
+RcppExport SEXP GillesCom_create_community(SEXP abundanceSEXP, SEXP interactionSEXP, SEXP KSEXP, SEXP d0SEXP, SEXP bSEXP, SEXP mSEXP, SEXP save_intSEXP, SEXP stochasticSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< arma::vec >::type abundance(abundanceSEXP);
@@ -18,13 +18,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec >::type b(bSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type m(mSEXP);
     Rcpp::traits::input_parameter< double >::type save_int(save_intSEXP);
-    create_community(abundance, interaction, K, d0, b, m, save_int);
+    Rcpp::traits::input_parameter< arma::mat >::type stochastic(stochasticSEXP);
+    create_community(abundance, interaction, K, d0, b, m, save_int, stochastic);
     return R_NilValue;
 END_RCPP
 }
 // load_community
-void load_community(arma::vec abundance, arma::mat trajectories, arma::mat interaction, arma::vec K, arma::vec d0, arma::vec b, arma::vec m, double time, double save_int, int cycles);
-RcppExport SEXP GillesCom_load_community(SEXP abundanceSEXP, SEXP trajectoriesSEXP, SEXP interactionSEXP, SEXP KSEXP, SEXP d0SEXP, SEXP bSEXP, SEXP mSEXP, SEXP timeSEXP, SEXP save_intSEXP, SEXP cyclesSEXP) {
+void load_community(arma::vec abundance, arma::mat trajectories, arma::mat interaction, arma::vec K, arma::vec d0, arma::vec b, arma::vec m, double time, double save_int, int cycles, arma::mat stochastic);
+RcppExport SEXP GillesCom_load_community(SEXP abundanceSEXP, SEXP trajectoriesSEXP, SEXP interactionSEXP, SEXP KSEXP, SEXP d0SEXP, SEXP bSEXP, SEXP mSEXP, SEXP timeSEXP, SEXP save_intSEXP, SEXP cyclesSEXP, SEXP stochasticSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< arma::vec >::type abundance(abundanceSEXP);
@@ -37,7 +38,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type time(timeSEXP);
     Rcpp::traits::input_parameter< double >::type save_int(save_intSEXP);
     Rcpp::traits::input_parameter< int >::type cycles(cyclesSEXP);
-    load_community(abundance, trajectories, interaction, K, d0, b, m, time, save_int, cycles);
+    Rcpp::traits::input_parameter< arma::mat >::type stochastic(stochasticSEXP);
+    load_community(abundance, trajectories, interaction, K, d0, b, m, time, save_int, cycles, stochastic);
     return R_NilValue;
 END_RCPP
 }
