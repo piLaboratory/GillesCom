@@ -5,9 +5,9 @@
 #' The function \code{diagPlots} plots up to four different diagnostic plots (controlled by the
 #' parameter "which":
 #' 1 - Total individuals over time
-#' 1 - Species- equivalents over time: number of species, number of species equivalents calculated by Shannon's and Simpson's diversity indexes.
-#' 4 - Mean abundance (mean number of individual per species)
-#' 5 - Abundances standard deviation (per species)
+#' 2 - Species- equivalents over time: number of species, number of species equivalents calculated by Shannon's and Simpson's diversity indexes.
+#' 3 - Mean abundance (mean number of individual per species)
+#' 4 - Abundances standard deviation (per species)
 #'
 #' Notice that the default invocation of this function displays plots 1 to 4.
 #'
@@ -52,7 +52,7 @@ diagPlots <- function(which=1:4) {
         cat("Mean abundance / species:\n")
         print(summary(my.mean))
     }
-if(4 %in% which) {
+    if(4 %in% which) {
         my.sd <- apply(trajectories(), 1, sd)
         plot(my.sd, type='l', main="Abundance standard dev", xlab="Time", ylab="")
         cat("Mean sd / species:\n")

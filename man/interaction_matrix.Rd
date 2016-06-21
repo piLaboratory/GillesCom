@@ -5,21 +5,32 @@
 \alias{ones}
 \title{Interaction matrix}
 \usage{
-interaction_matrix(J, stren = 0.1, con = 1, comp = TRUE)
+interaction_matrix(J, stren = 0.1, con = 1, comp = TRUE,
+  distr = c("normal", "gamma"), meanInter = 1)
 
 ones(J)
 }
 \arguments{
 \item{J}{size of metacommunity}
 
-\item{stren}{strength of interaction matrix, which is the standard deviation of the Gaussian from which the values are drawn}
+\item{stren}{strength of interaction matrix, which is the standard deviation of the distribution from which the values are drawn}
 
 \item{con}{connectance of the interaction matrix. Defaults to 1 (totally connected)}
 
-\item{comp}{Logical. Use \code{TRUE} for a competition only matrix (all entries are positive); \code{FALSE} for otherwise}
+\item{comp}{Logical. Use \code{TRUE} for a competition only matrix (all entries are positive); \code{FALSE} for otherwise. Ignored with Gamma distribution.}
+
+\item{distr}{character, the names of the distribution to draw the interaction coefficients.}
+
+\item{meanInter}{the mean value of interspecific competition coefficients for Gamma distribution.}
 }
 \description{
-The function \code{interaction_matrix} generates a Lotka-Volterra interaction matrix, following May. For a 
+The function \code{interaction_matrix} generates a Lotka-Volterra interaction matrix, following May
+with interaction coefficients drawn from a Normal or a Gamma distribution. For a 
 Caswell matrix, use \code{diag(J)}, and for a Hubbell matrix, use \code{ones(J)}.
+}
+\note{
+Coefficients drawn from the Gamma distribution are always positive numbers (implying only competion).
+In this case the mean value of the interspecific competition coefficients can be set with the argument 'meanInter'.
+The intra-species coefficients are always set to one.
 }
 

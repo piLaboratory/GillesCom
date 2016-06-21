@@ -4,6 +4,7 @@
 \alias{Init_Community}
 \alias{abundance}
 \alias{bdm}
+\alias{elapsed_cycles}
 \alias{elapsed_time}
 \alias{trajectories}
 \title{Community}
@@ -11,11 +12,13 @@
 Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
   save.int = 1)
 
-bdm(count = 1, progress = "text")
+bdm(count, time, progress = c("text", "none"))
 
 abundance()
 
 elapsed_time()
+
+elapsed_cycles()
 
 trajectories()
 }
@@ -37,6 +40,8 @@ resulting list of the \code{\link{ls_migration}} function}
 
 \item{count}{Number of cycles to be simulated}
 
+\item{time}{Total time to be simulated (i.e., if the simulation clock is in t=10, bdm(time=10) will simulate up to t=20)}
+
 \item{progress}{Should a text bar be used? Currently, "text" will produce a text based bar, and \code{NULL} will produce none.}
 }
 \description{
@@ -44,11 +49,14 @@ Functions for generating and altering the simulated Community. Function \code{In
 initializes a simulation.
 
 Function \code{bdm} runs one interaction of a Gillespie Algorithm of birth death and migration process in 
-a system of generalized Lotka-Volterra system of competing species
+a system of generalized Lotka-Volterra system of competing species. You may provide the number of simulated
+cycles or the end time for the simulation, but not both.
 
 Function \code{abundance} returns the current abundance vector for the community.
 
 Function \code{elapsed_time} returns the current simulation time for the community.
+
+Function \code{elapsed_cycles} returns the number of elapsed simulation cycles.
 
 Function \code{trajectories} returns a data frame in which each line corresponds to the species abundance
 distribution at a different time.
