@@ -10,7 +10,7 @@
 \title{Community}
 \usage{
 Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
-  save.int = 1)
+  save.int = 1, stochastic = data.frame())
 
 bdm(count, time, progress = c("text", "none"))
 
@@ -37,6 +37,10 @@ resulting list of the \code{\link{ls_migration}} function}
 \item{d0}{death rate when N=0}
 
 \item{save.int}{History saving interval (in simulated time units)}
+
+\item{stochastic}{Optional; only use if you want to include demographic stocasticity. A data.frame consisting of 
+two columns. The first represents the time intervals of the stochastic variation, and the second represents the
+multiplier to birth rates at that time intervals. See the vignettes for a more in-depth explanation.}
 
 \item{count}{Number of cycles to be simulated}
 

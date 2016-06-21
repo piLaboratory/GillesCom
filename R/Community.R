@@ -14,6 +14,9 @@
 #' @param m per capita migration rate in the metacommunity. May be the given as the 
 #' resulting list of the \code{\link{ls_migration}} function
 #' @param save.int History saving interval (in simulated time units)
+#' @param stochastic Optional; only use if you want to include demographic stocasticity. A data.frame consisting of 
+#' two columns. The first represents the time intervals of the stochastic variation, and the second represents the
+#' multiplier to birth rates at that time intervals. See the vignettes for a more in-depth explanation.
 #' @examples
 #' # Initializes the community (in a global object)
 #' Init_Community(100)

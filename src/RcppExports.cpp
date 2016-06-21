@@ -133,6 +133,16 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// get_stochastic
+arma::mat get_stochastic();
+RcppExport SEXP GillesCom_get_stochastic() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(get_stochastic());
+    return __result;
+END_RCPP
+}
 // trajectories
 arma::mat trajectories();
 RcppExport SEXP GillesCom_trajectories() {

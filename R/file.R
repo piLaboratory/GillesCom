@@ -1,8 +1,6 @@
 # File compatibility version. MUST be updated whenever a package change might
 # render the previous saved files unusable.
-.COMPAT = "0.0.3"
-
-warning("File persistent needs to be updated w/ stochasticity")
+.COMPAT = "0.0.3b"
 
 #' File persistence of simulations
 #' 
@@ -30,13 +28,14 @@ GillesComToFile <- function(file="GillesCom.rda") {
     date = Sys.time()
     trajectories = trajectories()
     interaction = get_interaction()
+    stochastic = get_stochastic()
     K = K()
     d0 = d0()
     birth = birth()
     migration = migration()
     time = elapsed_time()
     cycles = elapsed_cycles()
-    save(compat, seed, date, abundance, trajectories, interaction, K, d0, birth, migration, time, save_int, cycles, file=file)
+    save(compat, seed, date, abundance, trajectories, interaction, K, d0, birth, migration, time, save_int, cycles, stochastic, file=file)
     cat("File saved. Size:", format.h(file.info(file)$size), "\n")
 }
 
@@ -44,11 +43,14 @@ GillesComToFile <- function(file="GillesCom.rda") {
 #' @rdname file
 GillesComFromFile <- function(file="GillesCom.rda") {
     # to avoid NOTEs at R check:
-    compat <- NULL; seed <- NULL;
+    abundance <- NULL; trajectories <- NULL; interaction <- NULL; K <- NULL; d0 <- NULL
+    birth <- NULL; migration <- NULL; time <- NULL; save_int <- NULL; 
+    compat <- NULL; seed <- NULL; cycles <- NULL; stochastic <- NULL;
+    # Does the actual loading
     load(file=file)
     cat("File loaded. Size:", format.h(file.info(file)$size), "\nSimulation date/time:", format.Date(date),"\n")
     if (compat != .COMPAT) warning("NOTE: Incompatible file type!\nExpected ", .COMPAT, ", got ", compat)
-    load_community(abundance, trajectories, interaction, K, d0, birth, migration, time, save_int, cycles)
+    load_community(abundance, trajectories, interaction, K, d0, birth, migration, time, save_int, cycles, stochastic)
     return(invisible(seed));
 }
 

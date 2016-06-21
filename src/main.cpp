@@ -58,6 +58,7 @@ class Community {
     int cycles;
   public:
     arma::vec get_abundance() const {return abundance;}
+    arma::mat get_stochastic() const {return stochastic;}
     arma::vec get_d0() const {return d0;}
     arma::vec get_b() const {return b;}
     arma::vec get_m() const {return m;}
@@ -76,7 +77,7 @@ class Community {
       trajectories = _trajectories;
       interaction = _interaction;
       K = _K; d0 = _d0; b = _b; m = _m;
-      time  = _time; save_int = _save_int; cycles = _cycles;
+      time  = _time; save_int = _save_int; cycles = _cycles; stochastic = _stochastic;
     }
     Community(arma::vec _abundance, arma::mat _interaction,
         arma::vec _K, arma::vec _d0, arma::vec _b,
@@ -188,6 +189,11 @@ double save_int() {
 arma::mat get_interaction() {
   if (C==NULL) return arma::mat(1, 1, arma::fill::zeros);
   return C->get_interaction();
+}
+//[[Rcpp::export]]
+arma::mat get_stochastic() {
+  if (C==NULL) return arma::mat(0, 0, arma::fill::zeros);
+  return C->get_stochastic();
 }
 
 //[[Rcpp::export]]

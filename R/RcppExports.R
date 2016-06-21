@@ -45,6 +45,10 @@ get_interaction <- function() {
     .Call('GillesCom_get_interaction', PACKAGE = 'GillesCom')
 }
 
+get_stochastic <- function() {
+    .Call('GillesCom_get_stochastic', PACKAGE = 'GillesCom')
+}
+
 trajectories <- function() {
     .Call('GillesCom_trajectories', PACKAGE = 'GillesCom')
 }
