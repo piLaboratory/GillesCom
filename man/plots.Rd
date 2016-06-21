@@ -33,14 +33,12 @@ These functions plot relevant information about a simulation
 \details{
 The function \code{diagPlots} plots up to four different diagnostic plots (controlled by the
 parameter "which":
-1 - Species richness over time
-2 - Total individuals over time
-3 - Number of species equivalents calculated from Shannon information index
-4 - Kolmogorov-Smirnoff statistic between SADs at each time compared to the SAD at the last time
-5 - Estimated Fisher's alpha over time (from a log-series fit)
-6 - Estimated sdlog over time (from a lognormal fit)
+1 - Total individuals over time
+2 - Species- equivalents over time: number of species, number of species equivalents calculated by Shannon's and Simpson's diversity indexes.
+3 - Mean abundance (mean number of individual per species)
+4 - Abundances standard deviation (per species)
 
-Notice that the default invocation of this function displays only the plots 1 to 4.
+Notice that the default invocation of this function displays plots 1 to 4.
 
 The functions \code{radOverTime} and \code{octavOverTime} provide a superimposing plot
 with the rad and octav, respectively, at distinct points in time.
