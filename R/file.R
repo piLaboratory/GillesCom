@@ -2,6 +2,8 @@
 # render the previous saved files unusable.
 .COMPAT = "0.0.3"
 
+warning("File persistent needs to be updated w/ stochasticity")
+
 #' File persistence of simulations
 #' 
 #' Functions to save and load simulated data from the disk

@@ -20,6 +20,20 @@ int Csample (arma::vec prob) {
   return prob.n_elem;
 }
 
+// interpolates a function f(time) at instant t
+double interpol (arma::vec time, arma::vec f, double t) {
+    int i;
+    // This is inefficient, should be changed some day
+    // maybe we could cache the last "i" used?
+    for (i = 0; i < time.n_elem; i++) 
+        if (time[i] > t) break;
+    if (i == 0) return f[0];
+    if (i == time.n_elem) return f[f.n_elem - 1];
+    // this formula incurs on cancelation errors if the time step is small!
+    // find a better formula ASAP
+    return f[i-1] + (f[i] - f[i-1]) * (t - time[i-1]) / (time[i] - time[i-1]); 
+}
+
 class Community {
   private:
     // abundance vector: counts how many individuals from each species
@@ -28,12 +42,12 @@ class Community {
     arma::mat trajectories;
     // interaction matrix
     arma::mat interaction;
+    // stochastic effects matrix
+    arma::mat stochastic;
     // support capacity
     arma::vec K;
     // death rate when abundance=0
     arma::vec d0;
-    // current death rate ("cached" for bdm())
-    arma::vec dslope;
     // birth rate
     arma::vec b;
     // migration rate
@@ -57,38 +71,43 @@ class Community {
     // TODO: collapse both constructors, as we really don't need two!
     Community(arma::vec _abundance, arma::mat _trajectories, arma::mat _interaction,
         arma::vec _K, arma::vec _d0, arma::vec _b,
-        arma::vec _m, double _time, double _save_int, int _cycles) {
+        arma::vec _m, double _time, double _save_int, int _cycles, arma::mat _stochastic) {
       abundance = _abundance;
       trajectories = _trajectories;
       interaction = _interaction;
       K = _K; d0 = _d0; b = _b; m = _m;
       time  = _time; save_int = _save_int; cycles = _cycles;
-      dslope = (b-d0)/K; //slope of the density-dependent linear relation of death rate to N
     }
     Community(arma::vec _abundance, arma::mat _interaction,
         arma::vec _K, arma::vec _d0, arma::vec _b,
-        arma::vec _m, double _save_int) {
+        arma::vec _m, double _save_int, arma::mat _stochastic) {
       abundance = _abundance;
       trajectories = abundance.t();
       interaction = _interaction;
       K = _K; d0 = _d0; b = _b; m = _m;
-      time  = 0; cycles = 0; save_int = _save_int;
-      dslope = (b-d0)/K; //slope of the density-dependent linear relation of death rate to N
+      time  = 0; cycles = 0; save_int = _save_int; stochastic = _stochastic;
     }
     void saveHistory() {
       trajectories.insert_rows(trajectories.n_rows, abundance.t());
     }
     void bdm() {
+      double mult; arma::vec instant_b = b;
+      // stochastic multiplier for the birth rate:
+      if (stochastic.n_elem > 0 ) {
+        mult = interpol ( stochastic.col(0), stochastic.col(1), get_time());
+        instant_b = b * mult;
+      }
+      arma::vec dslope = (instant_b-d0)/K; //slope of the density-dependent linear relation of death rate to N
       // % performs element-wise multiplication
       arma::vec d = d0 + dslope % (abundance.t() * interaction).t();
       for (int i = 0; i < abundance.n_elem; i++) if(abundance(i) == 0) d(i) = 0;
       //Gillespie weights for each specie, which are the sum of their rates
-      arma::vec w = (abundance % (b + d)) + m; 
+      arma::vec w = (abundance % (instant_b + d)) + m; 
       //sampling which species will suffer the next action, proportionaly to their weights
       int c = Csample(w);
       // Should the selected species gain or lose an individual?
       double choice = R::runif(0,1);
-      if ( choice > (b(c)*abundance(c)+m(c)) / (b(c)*abundance(c)+m(c)+d(c)*abundance(c)))
+      if ( choice > (instant_b(c)*abundance(c)+m(c)) / (instant_b(c)*abundance(c)+m(c)+d(c)*abundance(c)))
         abundance(c) --;
       else 
         abundance(c) ++;
@@ -109,17 +128,17 @@ Community *C = NULL;
 // [[Rcpp::export]]
 void create_community(arma::vec abundance, arma::mat interaction,
         arma::vec K, arma::vec d0, arma::vec b,
-        arma::vec m, double save_int) {
+        arma::vec m, double save_int, arma::mat stochastic) {
   if (C!=NULL) warning("Warning: overwriting previous Community");
-  C = new Community(abundance, interaction, K, d0, b, m, save_int);
+  C = new Community(abundance, interaction, K, d0, b, m, save_int, stochastic);
 }
 
 // [[Rcpp::export]]
 void load_community(arma::vec abundance, arma::mat trajectories, arma::mat interaction,
         arma::vec K, arma::vec d0, arma::vec b,
-        arma::vec m, double time, double save_int, int cycles) {
+        arma::vec m, double time, double save_int, int cycles, arma::mat stochastic) {
   if (C!=NULL) warning("Warning: overwriting previous Community");
-  C = new Community(abundance, trajectories, interaction, K, d0, b, m, time, save_int, cycles);
+  C = new Community(abundance, trajectories, interaction, K, d0, b, m, time, save_int, cycles, stochastic);
 }
 
 //[[Rcpp::export]]
