@@ -1,3 +1,7 @@
+# Loads the Rcpp Module Community
+loadModule("Community", TRUE)
+
+
 #' Community
 #' 
 #' Functions for generating and altering the simulated Community. Function \code{Init_Community}
@@ -54,7 +58,10 @@ Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 
   if (any(abundance < 0)) stop ("Abundances must be positive integers or zero")
   if (length(K) != J || length(d0) != J || length(b) != J || length(m) != J || dim(interaction) != c(J,J))
      stop("All objects must have the same dimension as the abundance vector")
-  create_community(abundance, interaction, K, d0, b, m, save.int, as.matrix(stochastic))
+#  create_community(abundance, interaction, K, d0, b, m, save.int, as.matrix(stochastic))
+  a = new (Community, abundance, interaction, save.int)
+  a$K = K; a$b = b; a$m = m; a$d0 = d0; a$stochastic = as.matrix(stochastic)
+  return(a)
 }
 
 #' Interaction matrix
