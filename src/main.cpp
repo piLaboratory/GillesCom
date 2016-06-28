@@ -77,6 +77,7 @@ class Community {
       K = _K; d0 = _d0; b = _b; m = _m;
       time  = 0; cycles = 0; save_int = _save_int; stochastic = _stochastic;
     }
+    // TODO 2: Learn how to use a constructor with 7+ parameters in the Rcpp module??
     Community(arma::vec _abundance, arma::mat _interaction, double _save_int) {
         abundance = _abundance; save_int = _save_int;
         interaction = _interaction;
@@ -144,4 +145,3 @@ RCPP_MODULE (Community) {
         .method("Tbdm", &Community::Tbdm)
         ;
 }
-

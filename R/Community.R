@@ -1,44 +1,42 @@
 # Loads the Rcpp Module Community
 loadModule("Community", TRUE)
 
-
-#' Community
+#' Community generating functions
 #' 
 #' Functions for generating and altering the simulated Community. Function \code{Init_Community}
 #' initializes a simulation.
 #' 
-#' Because of the way the interaction with the underlying c++ code is implemented, only one
-#' community may be simulated at a time. Calling \code{Init_Community} more than once will
-#' overwrite the previous simulation objects!
-#' @param abundance vector of initial abundances of species in the community (set species not present to zero). For convenience, a single number is expanded as \code{rep(1,N)} (this also happens with parameters K, d0, b and m).
-#' @param interaction matrix of interaction coefficients, see \code{\link{interaction}}.
-#' @param K carrying capacities of each species
-#' @param d0 death rate when N=0
-#' @param b birth rates (constant)
-#' @param m per capita migration rate in the metacommunity. May be the given as the 
+#' Because of the way the interaction with the underlying c++ code is implemented, saving a Community
+#' object using save() or exiting R will not work! See \code{\link{GillesComToFile}} for an alternative.
+#' @param abundance vector of initial abundances of species in the community (set species not present to zero). 
+#' For convenience, a single number is expanded as \code{rep(1,N)} (this also happens with parameters K, d0, b and m).
+#' @param interaction matrix of interaction coefficients, see \code{\link{interaction_matrix}}.
+#' @param K vector with carrying capacities of each species
+#' @param d0 vector with death rate when N=0
+#' @param b vector with birth rates (constant)
+#' @param m vector with per capita migration rate in the metacommunity. May be the given as the 
 #' resulting list of the \code{\link{ls_migration}} function
 #' @param save.int History saving interval (in simulated time units)
 #' @param stochastic Optional; only use if you want to include demographic stocasticity. A data.frame consisting of 
 #' two columns. The first represents the time intervals of the stochastic variation, and the second represents the
 #' multiplier to birth rates at that time intervals. See the vignettes for a more in-depth explanation.
 #' @examples
-#' # Initializes the community (in a global object)
-#' Init_Community(100)
-#' # Runs 1e6 iteractions of the birth-death-migration process
-#' bdm(1e6)
+#' # Initializes the community
+#' Com = Init_Community(100)
+#' # Runs some iteractions of the birth-death-migration process
+#' bdm(Com, 5e5, progress = "none")
 #' # Gets and analyzes the abundance vector
-#' (ab <- as.numeric(abundance()))
+#' print(ab <- as.numeric(Com$abundance))
 #' require(sads)
 #' f <- sads::fitlnorm(ab[ab>0])
 #' plot(f, which=1)
 #' # Simulation internal time elapsed
-#' elapsed_time()
+#' print(Com$time)
 #' # History saves a line for each time period elapsed (starting with 0):
-#' dim(trajectories())
+#' print(dim(Com$trajectories))
 #' @export
 #' @import graphics
 #' @useDynLib GillesCom
-#' @rdname Community
 Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0, save.int = 1, 
                            stochastic = data.frame()) {
   # Error checking, etc
@@ -59,6 +57,7 @@ Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 
   if (length(K) != J || length(d0) != J || length(b) != J || length(m) != J || dim(interaction) != c(J,J))
      stop("All objects must have the same dimension as the abundance vector")
 #  create_community(abundance, interaction, K, d0, b, m, save.int, as.matrix(stochastic))
+  # TODO: Move around some of the parameters to the constructor?
   a = new (Community, abundance, interaction, save.int)
   a$K = K; a$b = b; a$m = m; a$d0 = d0; a$stochastic = as.matrix(stochastic)
   return(a)
@@ -109,14 +108,15 @@ ones <- function(J) matrix(rep(1, J*J), ncol=J)
 #' Function \code{bdm} runs one interaction of a Gillespie Algorithm of birth death and migration process in 
 #' a system of generalized Lotka-Volterra system of competing species. You may provide the number of simulated
 #' cycles or the end time for the simulation, but not both.
-#' @rdname Community
+#' @rdname Init_Community
+#' @param community An object of class \code{\link{Community}}
 #' @param count Number of cycles to be simulated
 #' @param time Total time to be simulated (i.e., if the simulation clock is in t=10, bdm(time=10) will simulate up to t=20)
 #' @param progress Should a text bar be used? Currently, "text" will produce a text based bar, and \code{NULL} will produce none.
 #' @export
 #' @import utils
 
-bdm <- function(count, time, progress=c("text", "none")) {
+bdm <- function(community, count, time, progress=c("text", "none")) {
     if (!missing(count) & !missing(time)) stop("Provide count or time, but not both")
     if (missing(count) & missing(time)) count = 1
     progress <- match.arg(progress)
@@ -125,43 +125,23 @@ bdm <- function(count, time, progress=c("text", "none")) {
         step <- time / 100
         if(progress=="text") pb <- utils::txtProgressBar(style=3)
         for (i in 1:100) {
-            Tbdm(now + i*step)
+            community$Tbdm(now + i*step)
             if(progress=="text") setTxtProgressBar(pb, i/100)
         }
         if(progress=="text") cat ("\n") 
     } else {
         if (count < 100)
-            return(Cbdm(count))
+            return(community$Cbdm(count))
         step <- count / 100
         if(progress=="text") pb <- utils::txtProgressBar(style=3)
         for (i in 1:100) {
-            Cbdm(step)
+            community$Cbdm(step)
             if(progress=="text") setTxtProgressBar(pb, i/100)
         }
         if(progress=="text") cat ("\n") 
     }
 }
 
-#' Function \code{abundance} returns the current abundance vector for the community.
-#' @rdname Community
-#' @export
-"abundance"
-
-#' Function \code{elapsed_time} returns the current simulation time for the community.
-#' @rdname Community
-#' @export
-"elapsed_time"
-
-#' Function \code{elapsed_cycles} returns the number of elapsed simulation cycles.
-#' @rdname Community
-#' @export
-"elapsed_cycles"
-
-#' Function \code{trajectories} returns a data frame in which each line corresponds to the species abundance
-#' distribution at a different time.
-#' @rdname Community
-#' @export
-"trajectories"
 
 #' Helper functions
 #' 
