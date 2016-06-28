@@ -1,6 +1,6 @@
 # File compatibility version. MUST be updated whenever a package change might
 # render the previous saved files unusable.
-.COMPAT = "0.0.3b"
+.COMPAT = "0.1.0"
 
 #' File persistence of simulations
 #' 

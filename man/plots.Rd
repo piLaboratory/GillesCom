@@ -47,7 +47,7 @@ with the rad and octav, respectively, at distinct points in time.
 }
 \examples{
 Com = Init_Community(50)
-bdm(Com, 1e4)
+bdm(Com, 1e4, progress="none")
 diagPlots(Com)
 radOverTime(Com)
 octavOverTime(Com)
