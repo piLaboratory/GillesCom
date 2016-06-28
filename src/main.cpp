@@ -115,19 +115,15 @@ class Community {
       time += elapsed; cycles += 1;
       return;
     }
+    void Cbdm(int count = 1) {
+      for (int i = 0; i < count; i ++)
+        bdm();
+    }
+    void Tbdm(double _time) {
+        while (time < _time)
+            bdm();
+    }
 };
-
-//void Cbdm(int count = 1) {
-//  if (C==NULL) return;
-//  for (int i = 0; i < count; i ++)
-//    C->bdm();
-//}
-
-//void Tbdm(double time) {
-//  if (C==NULL) return;
-//  while (C->get_time() < time)
-//    C->bdm();
-//}
 
 RCPP_MODULE (Community) {
     using namespace Rcpp;
@@ -144,7 +140,8 @@ RCPP_MODULE (Community) {
         .field("time", &Community::time)
         .field("save_int", &Community::save_int)
         .field("cycles", &Community::cycles)
-        .method("bdm", &Community::bdm)
+        .method("Cbdm", &Community::Cbdm)
+        .method("Tbdm", &Community::Tbdm)
         ;
 }
 
