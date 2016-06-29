@@ -1,4 +1,5 @@
 # Loads the Rcpp Module Community
+#' 
 loadModule("Community", TRUE)
 
 #' Community generating functions
@@ -35,7 +36,7 @@ loadModule("Community", TRUE)
 #' # History saves a line for each time period elapsed (starting with 0):
 #' print(dim(Com$trajectories))
 #' @export
-#' @import graphics
+#' @import stats sads Rcpp RcppArmadillo methods graphics
 #' @useDynLib GillesCom
 Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0, save.int = 1, 
                            stochastic = data.frame()) {
@@ -153,7 +154,7 @@ bdm <- function(community, count, time, progress=c("text", "none")) {
 #' @param alpha Fisher's alpha of the metacommunity
 #' @param m per species migration rate
 #' @export
-#' @import sads
+#' @import stats sads
 ls_migration <- function(J, S, alpha, m){
     if(missing(alpha)&missing(S))
         stop("Please provide alpha or S")

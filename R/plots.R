@@ -83,11 +83,12 @@ get.Deq <- function(r){
 }
 
 #' @import grDevices
-#' @rdname plots
 #' @param steps number of intervals in which to cut the trajectories
 #' @param col For both \code{radOverTime} and \code{octavOverTime}, the colors are chosen by three values: [1] the color of the most ancestral rad/octav, [2] the color of the latest rad/octav and [3] a highlight color for the current rad/octav. The colors for the remaining rad/octavs to be plotted are generated with a ramp palette from col[1] to col[2].
 #' @param par.axis Additional graphical parameters for handling the axes of the plot.
 #' @param \dots Additional graphical parameters for the plots, such as main title, labels, font size, etc; EXCEPT for the axis.
+#' @rdname plots
+#' @export
 radOverTime <- function(community, steps, col=c("gray90", "gray10", "blue4"), par.axis=list(), ...) {
     dots <- list(...)
     if (length(col) != 3) stop ("The col argument must have exactly three elements; see help")
@@ -113,8 +114,9 @@ radOverTime <- function(community, steps, col=c("gray90", "gray10", "blue4"), pa
     lines(rad(ab), type='l', col=col[3], lwd=2)
 }
 
-#' @rdname plots
 #' @param prop Logical. Should the octav be plotted using proportions (as opposed to absolute numbers)?
+#' @rdname plots
+#' @export
 octavOverTime <- function(community, steps, prop=TRUE, col=c("gray90", "gray10", "blue4"), par.axis=list(), ...) {
     dots <- list(...) 
     if (length(col) != 3) stop ("The col argument must have exactly three elements; see help")

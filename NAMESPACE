@@ -3,7 +3,7 @@
 # R functions 
 export(Init_Community, interaction_matrix, diagPlots, ls_migration, ones, radOverTime, octavOverTime, bdm)
 # File functions
-export(GillesComToFile, GillesComFromFile)
+export(GillesComToFile, GillesComFromFile, SeedFromFile)
 # Imports IN ORDER
 import(graphics)
 import(grDevices)

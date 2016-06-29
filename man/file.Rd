@@ -34,7 +34,7 @@ simulation with the saved key, use ".Random.seed <- SeedFromFile()".
 \examples{
 filename = tempfile()
 # Generate a new community
-a = Init_Community(50); bdm(a, 10000)
+a = Init_Community(50); bdm(a, 10000, progress="none")
 # Saves the simulated data
 GillesComToFile(a, filename)
 # Loads the simulated data
