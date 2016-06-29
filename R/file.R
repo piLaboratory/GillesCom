@@ -12,9 +12,8 @@
 #' or even in other computers with reproducible results.
 #' 
 #' The function \code{GillesComFromFile} loads all of the relevant
-#' data about a simulated community from a file. It returns the saved random
-#' number generator seed as an invisible vector, so if you want to continue the
-#' simulation with the saved key, use ".Random.seed <- SeedFromFile()".
+#' data about a simulated community from a file. If you also want to
+#' restore the number generator seed, use ".Random.seed <- SeedFromFile()".
 #' @param file filename to which save / from which load the data
 #' @param community An object of class \code{\link{Community}}
 #' @examples
