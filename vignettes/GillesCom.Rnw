@@ -23,7 +23,7 @@
 \author{Paulo In\'acio Prado and Andre Chalom \\ Theoretical Ecology Lab \\ LAGE at the Dep of Ecology, USP, Brazil \\ 
   \url{http://ecologia.ib.usp.br/let/} \\ \url{prado@ib.usp.br}}
 
-\date{May, 10, 2016}
+\date{June, 29, 2016}
 
 \maketitle
 
@@ -95,11 +95,12 @@ see \cite{Kessler2015} for more details.
 
 \section{Initializing the community}
 
-For performance reasons, this package works with a \emph{global} community object, so there can be only one
-active simulation at any given time. In order to initialize a community, use the function 
-\code{Init\_Community}. Notice that you don't need to assign this call to any object:
+For performance reasons, this package works with an Rcpp module encapsulating the actual simulation data.
+This is mostly transparent to the user, but some care must be exercised in order to avoid some pitfalls
+of the Rcpp integration. In order to initialize a community, use the function 
+\code{Init\_Community}, and assign the resulting object to a variable.
 <<Init>>=
-Init_Community(abundance=rep(0, N), interaction=random, b=1, m = migration)
+com = Init_Community(abundance=rep(0, N), interaction=random, b=1, m = migration)
 @
 
 The arguments $m$, $b$ and $d0$ of this function are expanded to vectors of the appropriate length, if
@@ -108,36 +109,36 @@ necessary.
 \section{Running and examining the simulation}
 In order to run simulation cycles of the birth, death and migration process, execute the function \code{bdm}:
 <<bdm>>=
-bdm()
-bdm(count = 1e4, progress="none")
-bdm(time = 2, progress="none")
+bdm(com)
+bdm(com, count = 1e4, progress="none")
+bdm(com, time = 2, progress="none")
 @
 
-The function \code{bdm} accepts the number of cycles to be run as the first parameter. 
+The function \code{bdm} accepts the number of cycles to be run as the second parameter. 
 Optionally, you may specify the units of simulated time that you want to run as the \code{time} argument.
 The last parameter controls whether a progress bar should be displayed on the screen.
 In order to query about the
-current status of the simulation, the following functions are useful:
+current status of the simulation, use the slots in the \code{Community} class (see \code{?Community} for a full list:
 <<functions>>=
 # Current abundance vector
-ab <- as.numeric(abundance())
+ab <- as.numeric(com$abundance)
 ab[ab > 0]
 # Simulation internal time elapsed
-elapsed_time()
+print(com$time)
 # Simulation cycles elapsed
-elapsed_cycles()
+print(com$cycles)
 # `Trajectories` saves a line for each time period elapsed (starting with 0):
-dim(trajectories())
+dim(com$trajectories)
 @
 
-Please note that the result from \code{abundance} is \emph{not} the same as the last line 
+Please note that the result from the slot \code{abundance} is \emph{not} the same as the last line 
 in \code{trajectories}. This is because the lines in \code{trajectories} is recorded whenever
 the clock reaches a designated interval (by default, every unit of time), while \code{abundance}
-gives the abundance at precisely the instant given by \code{elapsed\_time}.
+gives the abundance at precisely the instant given by the slot \code{time}.
 
 Some diagnostic plots may be generated with:
 <<diagPlot, fig=TRUE>>=
-diagPlots()
+diagPlots(com)
 @
 
 Notice that the x-axis on the plots is given by units of simulated time, \emph{NOT} cycles.
@@ -150,10 +151,10 @@ times, and darker lines representing more modern times. A blue line is superimpo
 the current community:
 
 <<radOverTime, fig=TRUE>>=
-radOverTime()
+radOverTime(com)
 @
 <<octavOverTime, fig=TRUE>>=
-octavOverTime()
+octavOverTime(com)
 @
 
 \section{Environmental stochasticity}
@@ -169,9 +170,9 @@ plot(birth.df, type='l')
 
 Then, we generate a community under the effect of this sotchastic birth rate multiplier as:
 <<>>=
-Init_Community(50, stochastic=birth.df)
-bdm(time=50)
-diagPlots()
+stochcom = Init_Community(50, stochastic=birth.df)
+bdm(stochcom, time=30)
+diagPlots(stochcom)
 @
 
 \section{File persistence}
@@ -181,12 +182,11 @@ or in other computer. To save all relevant information to the simulation, you ca
 \code{GillesComToFile} function, and to load a file saved by this function, use \code{GillesComFromFile}.
 
 The saving function stores the status of the random number generator, to allow for reproducible
-simulations; however, the loading function cannot automatically restore this status. It does, however,
-return an invisible vector containing the random seed. In order to restore the simulation with
-the same random number generator state, use the following:
+simulations; however, the loading function cannot automatically restore this status. However, we provide another
+function to restore the random seed:
 
 <<load, eval = FALSE>>=
-.Random.seed <- GillesComFromFile("data.rda")
+.Random.seed <- SeedFromFile("data.rda")
 @
 
 \section{Bugs and issues}

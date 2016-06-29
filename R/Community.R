@@ -121,7 +121,7 @@ bdm <- function(community, count, time, progress=c("text", "none")) {
     if (missing(count) & missing(time)) count = 1
     progress <- match.arg(progress)
     if(missing(count)) {  ## This section is for specified time
-        now = elapsed_time()
+        now = community$time
         step <- time / 100
         if(progress=="text") pb <- utils::txtProgressBar(style=3)
         for (i in 1:100) {
