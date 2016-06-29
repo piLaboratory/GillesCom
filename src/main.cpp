@@ -40,6 +40,7 @@ class Community {
     arma::vec abundance;
     // trajectories matrix: one row for the abundances at each specified time
     arma::mat trajectories;
+    Rcpp::List trajectories2;
     // interaction matrix
     arma::mat interaction;
     // stochastic effects matrix
@@ -82,9 +83,14 @@ class Community {
         abundance = _abundance; save_int = _save_int;
         interaction = _interaction;
         time = 0; cycles = 0; trajectories = abundance.t();
+        trajectories2 = Rcpp::List::create (abundance.t(), time, cycles);
     }
     void saveHistory() {
+////  #### This code REALLY needs a cleanup!
       trajectories.insert_rows(trajectories.n_rows, abundance.t());
+      arma::mat tt = trajectories2[0];
+      tt.insert_rows(tt.n_rows, abundance.t());
+      trajectories2[0] = tt;
     }
     void bdm() {
       double mult; arma::vec instant_b = b;
@@ -132,6 +138,7 @@ RCPP_MODULE (Community) {
         .constructor<arma::vec, arma::mat, double> ()
         .field("abundance", &Community::abundance)
         .field("trajectories", &Community::trajectories)
+        .field("trajectories2", &Community::trajectories2)
         .field("interaction", &Community::interaction)
         .field("stochastic", &Community::stochastic)
         .field("K", &Community::K)
