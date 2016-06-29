@@ -1,5 +1,16 @@
-# Loads the Rcpp Module Community
+#' Rcpp module: Community
 #' 
+#' Bla bla
+#' @details
+#' \itemize{
+#'  \item{multilayer}{ reflection and transmission of a multilayer using a transfer matrix formalism}
+#'  \item{recursive <- fresnel}{ reflection and transmission of a multilayer using recursive application of Fresnel coefficients}
+#' }
+#' @name Community
+#' @doctype data
+#' @export
+NULL
+# Loads the Rcpp Module Community
 loadModule("Community", TRUE)
 
 #' Community generating functions
