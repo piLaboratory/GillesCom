@@ -39,8 +39,7 @@ class Community {
     // abundance vector: counts how many individuals from each species
     arma::vec abundance;
     // trajectories matrix: one row for the abundances at each specified time
-    arma::mat trajectories;
-    Rcpp::List trajectories2;
+    Rcpp::List trajectories;
     // interaction matrix
     arma::mat interaction;
     // stochastic effects matrix
@@ -58,39 +57,28 @@ class Community {
     // simulated cycles so far
     int cycles;
   public:
-    // overloaded constructor for restoring a saved sim
-    // TODO: collapse both constructors, as we really don't need two!
-    Community(arma::vec _abundance, arma::mat _trajectories, arma::mat _interaction,
-        arma::vec _K, arma::vec _d0, arma::vec _b,
-        arma::vec _m, double _time, double _save_int, int _cycles, arma::mat _stochastic) {
-      abundance = _abundance;
-      trajectories = _trajectories;
-      interaction = _interaction;
-      K = _K; d0 = _d0; b = _b; m = _m;
-      time  = _time; save_int = _save_int; cycles = _cycles; stochastic = _stochastic;
-    }
-    Community(arma::vec _abundance, arma::mat _interaction,
-        arma::vec _K, arma::vec _d0, arma::vec _b,
-        arma::vec _m, double _save_int, arma::mat _stochastic) {
-      abundance = _abundance;
-      trajectories = abundance.t();
-      interaction = _interaction;
-      K = _K; d0 = _d0; b = _b; m = _m;
-      time  = 0; cycles = 0; save_int = _save_int; stochastic = _stochastic;
-    }
-    // TODO 2: Learn how to use a constructor with 7+ parameters in the Rcpp module??
+    // TODO: Learn how to use a constructor with 7+ parameters in the Rcpp module??
     Community(arma::vec _abundance, arma::mat _interaction, double _save_int) {
         abundance = _abundance; save_int = _save_int;
         interaction = _interaction;
-        time = 0; cycles = 0; trajectories = abundance.t();
-        trajectories2 = Rcpp::List::create (abundance.t(), time, cycles);
+        time = 0; cycles = 0; 
+        trajectories = Rcpp::List::create (abundance.t(), 
+                arma::vec(1, arma::fill::zeros),
+                arma::vec(1, arma::fill::zeros));
     }
     void saveHistory() {
-////  #### This code REALLY needs a cleanup!
-      trajectories.insert_rows(trajectories.n_rows, abundance.t());
-      arma::mat tt = trajectories2[0];
+////  ######## TODO: This code REALLY needs a cleanup! ##########
+      arma::mat tt = trajectories[0];
       tt.insert_rows(tt.n_rows, abundance.t());
-      trajectories2[0] = tt;
+      trajectories[0] = tt;
+      arma::vec t = trajectories[1];
+      t.insert_rows(t.n_rows, 1);
+      t[ t.n_rows - 1 ] = time;
+      trajectories[1] = t;
+      arma::vec t2 = trajectories[2];
+      t2.insert_rows(t2.n_rows, 1);
+      t2[ t2.n_rows - 1 ] = cycles;
+      trajectories[2] = t2;
     }
     void bdm() {
       double mult; arma::vec instant_b = b;
@@ -138,7 +126,6 @@ RCPP_MODULE (Community) {
         .constructor<arma::vec, arma::mat, double> ()
         .field("abundance", &Community::abundance)
         .field("trajectories", &Community::trajectories)
-        .field("trajectories2", &Community::trajectories2)
         .field("interaction", &Community::interaction)
         .field("stochastic", &Community::stochastic)
         .field("K", &Community::K)
