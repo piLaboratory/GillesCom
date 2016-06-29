@@ -1,13 +1,41 @@
 #' Rcpp module: Community
 #' 
-#' Bla bla
+#'    The Community class (or Rcpp_Community) implements a Rcpp interface to simulate the dynamics of an ecological
+#'    community. It should be created with \code{\link{Init_Community}}, and the simulation should be carried out
+#'    using the \code{\link{bdm}} function, but the data may be retrieved directly using the accessors described
+#'    below.
 #' @details
+#' The class Community contains the following slots:
 #' \itemize{
-#'  \item{multilayer}{ reflection and transmission of a multilayer using a transfer matrix formalism}
-#'  \item{recursive <- fresnel}{ reflection and transmission of a multilayer using recursive application of Fresnel coefficients}
+#'  \item{\code{$abundance}}{contains the current abundance vector for the community.}
+#'
+#'  \item{\code{$time}} {contains the current simulation time for the community.}
+#'
+#'  \item{\code{$cycles} }{contains the number of elapsed simulation cycles.}
+#'
+#'  \item{\code{$trajectories}}{ contains a data frame in which each line corresponds to the species abundance
+#'distribution at a different time.}
+#'
+#'  \item{  \code{$K}}{ contains a vector with the carrying capacity of each species.}
+#'
+#'  \item{  \code{$b}}{ contains a vector with the birth rate of each species.}
+#'
+#'  \item{  \code{$d0}}{ contains a vector with the base death rate of each species (the actual death rate is affected by the
+#'relation between total populations and carrying capacities).}
+#'
+#'  \item{  \code{$interaction}}{ contains an interaction matrix detailing how each species affects one another. }
+#'
+#'  \item{  \code{$m}}{ contains a vector with the migration rates of each species. See \code{\link{ls_migration}}.}
+#'
+#'  \item{  \code{$save_int}}{ contains the saving interval, which is the simulation time that must go by between "snapshots"
+#'    that are saved in the slot \code{$trajectories}.}
+#'
+#' \item{   \code{stochastic}}{ contains a \code{data.frame} related to how demographic stochasticity affects the
+#'    community. See the vignettes for details.}
 #' }
+#' @examples
+#' show(Community)
 #' @name Community
-#' @doctype data
 #' @export
 NULL
 # Loads the Rcpp Module Community

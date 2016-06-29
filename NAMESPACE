@@ -4,6 +4,8 @@
 export(Init_Community, interaction_matrix, diagPlots, ls_migration, ones, radOverTime, octavOverTime, bdm)
 # File functions
 export(GillesComToFile, GillesComFromFile, SeedFromFile)
+# The community "class"
+export(Community)
 # Imports IN ORDER
 import(graphics)
 import(grDevices)
