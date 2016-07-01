@@ -6,15 +6,17 @@
 \alias{radOverTime}
 \title{Plotting functions}
 \usage{
-diagPlots(which = 1:4)
+diagPlots(community, which = 1:4)
 
-radOverTime(steps, col = c("gray90", "gray10", "blue4"), par.axis = list(),
-  ...)
-
-octavOverTime(steps, prop = TRUE, col = c("gray90", "gray10", "blue4"),
+radOverTime(community, steps, col = c("gray90", "gray10", "blue4"),
   par.axis = list(), ...)
+
+octavOverTime(community, steps, prop = TRUE, col = c("gray90", "gray10",
+  "blue4"), par.axis = list(), ...)
 }
 \arguments{
+\item{community}{An object of class \code{\link{Community}}}
+
 \item{which}{numerical, may be a single number or a vector: which plots should be done (see Details)}
 
 \item{steps}{number of intervals in which to cut the trajectories}
@@ -33,16 +35,21 @@ These functions plot relevant information about a simulation
 \details{
 The function \code{diagPlots} plots up to four different diagnostic plots (controlled by the
 parameter "which":
-1 - Species richness over time
-2 - Total individuals over time
-3 - Number of species equivalents calculated from Shannon information index
-4 - Kolmogorov-Smirnoff statistic between SADs at each time compared to the SAD at the last time
-5 - Estimated Fisher's alpha over time (from a log-series fit)
-6 - Estimated sdlog over time (from a lognormal fit)
+1 - Total individuals over time
+2 - Species- equivalents over time: number of species, number of species equivalents calculated by Shannon's and Simpson's diversity indexes.
+3 - Mean abundance (mean number of individual per species)
+4 - Abundances standard deviation (per species)
 
-Notice that the default invocation of this function displays only the plots 1 to 4.
+Notice that the default invocation of this function displays plots 1 to 4.
 
 The functions \code{radOverTime} and \code{octavOverTime} provide a superimposing plot
 with the rad and octav, respectively, at distinct points in time.
+}
+\examples{
+Com = Init_Community(50)
+bdm(Com, 1e4, progress="none")
+diagPlots(Com)
+radOverTime(Com)
+octavOverTime(Com)
 }
 
