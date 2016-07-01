@@ -3,13 +3,18 @@
 \name{GillesComToFile}
 \alias{GillesComFromFile}
 \alias{GillesComToFile}
+\alias{SeedFromFile}
 \title{File persistence of simulations}
 \usage{
-GillesComToFile(file = "GillesCom.rda")
+GillesComToFile(community, file = "GillesCom.rda")
 
 GillesComFromFile(file = "GillesCom.rda")
+
+SeedFromFile(file = "GillesCom.rda")
 }
 \arguments{
+\item{community}{An object of class \code{\link{Community}}}
+
 \item{file}{filename to which save / from which load the data}
 }
 \description{
@@ -24,6 +29,21 @@ or even in other computers with reproducible results.
 The function \code{GillesComFromFile} loads all of the relevant
 data about a simulated community from a file. It returns the saved random
 number generator seed as an invisible vector, so if you want to continue the
-simulation with the saved key, use ".Random.seed <- GillesComFromFile()".
+simulation with the saved key, use ".Random.seed <- SeedFromFile()".
+}
+\examples{
+filename = tempfile()
+# Generate a new community
+a = Init_Community(50); bdm(a, 10000, progress="none")
+# Saves the simulated data
+GillesComToFile(a, filename)
+# Loads the simulated data
+b = GillesComFromFile(filename)
+# Notice that a and b are different objects...
+identical (a,b)
+# But their content is the same
+identical (a$trajectories, b$trajectories)
+# To load the random seed as well...
+.Random.seed <- SeedFromFile(filename)
 }
 
