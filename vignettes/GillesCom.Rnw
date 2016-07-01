@@ -23,7 +23,7 @@
 \author{Paulo In\'acio Prado and Andre Chalom \\ Theoretical Ecology Lab \\ LAGE at the Dep of Ecology, USP, Brazil \\ 
   \url{http://ecologia.ib.usp.br/let/} \\ \url{prado@ib.usp.br}}
 
-\date{June, 29, 2016}
+\date{July, 01, 2016}
 
 \maketitle
 
@@ -117,6 +117,9 @@ bdm(com, time = 2, progress="none")
 The function \code{bdm} accepts the number of cycles to be run as the second parameter. 
 Optionally, you may specify the units of simulated time that you want to run as the \code{time} argument.
 The last parameter controls whether a progress bar should be displayed on the screen.
+
+Notice that \code{bdm} does not return anything. It affects directly the object received as the first parameter.
+
 In order to query about the
 current status of the simulation, use the slots in the \code{Community} class (see \code{?Community} for a full list:
 <<functions>>=
@@ -128,13 +131,21 @@ print(com$time)
 # Simulation cycles elapsed
 print(com$cycles)
 # `Trajectories` saves a line for each time period elapsed (starting with 0):
-dim(com$trajectories)
+dim(com$trajectories[[1]])
 @
 
 Please note that the result from the slot \code{abundance} is \emph{not} the same as the last line 
 in \code{trajectories}. This is because the lines in \code{trajectories} is recorded whenever
 the clock reaches a designated interval (by default, every unit of time), while \code{abundance}
 gives the abundance at precisely the instant given by the slot \code{time}.
+
+Taking a closer look at the \code{trajectories} object, we see that it is a list with three
+components: a matrix with the abundances of each species at each snapshot, and two vectors that
+can be used to see the exact time and elapsed cycles at each snapshot:
+
+<<trajectories>>=
+str(com$trajectories)
+@
 
 Some diagnostic plots may be generated with:
 <<diagPlot, fig=TRUE>>=
