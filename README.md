@@ -1,4 +1,6 @@
 # GillesCom
+[![Travis-CI Build Status](https://travis-ci.org/piLaboratory/GillesCom.svg?branch=master)](https://travis-ci.org/piLaboratory/GillesCom)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/piLaboratory/GillesCom?branch=master&svg=true)](https://ci.appveyor.com/project/piLaboratory/GillesCom)
 ## An R package for Gillespie Simulation of Ecological Communities Dynamics
 ### Paulo I. Prado & Andre Chalom
 
