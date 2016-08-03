@@ -1,8 +1,8 @@
 Package: GillesCom
 Type: Package
 Title: Gillespie Simulation of Ecological Communities Dynamics
-Version: 0.1.0
-Date: 2016-06-27
+Version: 0.1.1
+Date: 2016-07-01
 Author: Paulo I. Prado and Andre Chalom
 Maintainer: Paulo I. Prado <prado@ib.usp.br>
 Imports:

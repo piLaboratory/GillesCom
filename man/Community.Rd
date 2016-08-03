@@ -18,8 +18,10 @@ The class Community contains the following slots:
 
  \item{\code{$cycles} }{contains the number of elapsed simulation cycles.}
 
- \item{\code{$trajectories}}{ contains a data frame in which each line corresponds to the species abundance
-distribution at a different time.}
+ \item{\code{$trajectories}}{ contains a list with the relevant data to reconstruct the system history. The first 
+element in this list is a data frame in which each line corresponds to the species abundance
+distribution at a different time, and the second and third elements contains vectors with the time and cycle elapsed
+at each "snapshot".}
 
  \item{  \code{$K}}{ contains a vector with the carrying capacity of each species.}
 

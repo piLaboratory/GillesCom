@@ -13,8 +13,10 @@
 #'
 #'  \item{\code{$cycles} }{contains the number of elapsed simulation cycles.}
 #'
-#'  \item{\code{$trajectories}}{ contains a data frame in which each line corresponds to the species abundance
-#'distribution at a different time.}
+#'  \item{\code{$trajectories}}{ contains a list with the relevant data to reconstruct the system history. The first 
+#' element in this list is a data frame in which each line corresponds to the species abundance
+#' distribution at a different time, and the second and third elements contains vectors with the time and cycle elapsed
+#' at each "snapshot".}
 #'
 #'  \item{  \code{$K}}{ contains a vector with the carrying capacity of each species.}
 #'
@@ -72,8 +74,11 @@ loadModule("Community", TRUE)
 #' plot(f, which=1)
 #' # Simulation internal time elapsed
 #' print(Com$time)
-#' # History saves a line for each time period elapsed (starting with 0):
-#' print(dim(Com$trajectories))
+#' # Trajectories saves a line for each time period elapsed (starting with 0), along with 
+#' # the exact time at each snapshot:
+#' print(length(Com$trajectories[[2]]))
+#' @return \code{Init_Community} returns an object of class \code{\link{Community}}. 
+#' \code{bdm} returns nothing. This function is called by its side effects only.
 #' @export
 #' @import stats sads Rcpp RcppArmadillo methods graphics
 #' @useDynLib GillesCom

@@ -39,6 +39,10 @@ multiplier to birth rates at that time intervals. See the vignettes for a more i
 
 \item{progress}{Should a text bar be used? Currently, "text" will produce a text based bar, and \code{NULL} will produce none.}
 }
+\value{
+\code{Init_Community} returns an object of class \code{\link{Community}}. 
+\code{bdm} returns nothing. This function is called by its side effects only.
+}
 \description{
 Functions for generating and altering the simulated Community. Function \code{Init_Community}
 initializes a simulation.
@@ -63,7 +67,8 @@ f <- sads::fitlnorm(ab[ab>0])
 plot(f, which=1)
 # Simulation internal time elapsed
 print(Com$time)
-# History saves a line for each time period elapsed (starting with 0):
-print(dim(Com$trajectories))
+# Trajectories saves a line for each time period elapsed (starting with 0), along with 
+# the exact time at each snapshot:
+print(length(Com$trajectories[[2]]))
 }
 
