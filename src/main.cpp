@@ -81,23 +81,23 @@ class Community {
       trajectories[2] = t2;
     }
     void bdm() {
-      double mult; arma::vec instant_b = b;
-      // stochastic multiplier for the birth rate:
+      double mult; arma::vec instant_K = b;
+      // stochastic multiplier for K:
       if (stochastic.n_elem > 0 ) {
         mult = interpol ( stochastic.col(0), stochastic.col(1), time );
-        instant_b = b * mult;
+        instant_K = K * mult;
       }
-      arma::vec dslope = (instant_b-d0)/K; //slope of the density-dependent linear relation of death rate to N
+      arma::vec dslope = (b-d0)/instant_K; //slope of the density-dependent linear relation of death rate to N
       // % performs element-wise multiplication
       arma::vec d = d0 + dslope % (abundance.t() * interaction).t();
       for (int i = 0; i < abundance.n_elem; i++) if(abundance(i) == 0) d(i) = 0;
       //Gillespie weights for each specie, which are the sum of their rates
-      arma::vec w = (abundance % (instant_b + d)) + m; 
+      arma::vec w = (abundance % (b + d)) + m; 
       //sampling which species will suffer the next action, proportionaly to their weights
       int c = Csample(w);
       // Should the selected species gain or lose an individual?
       double choice = R::runif(0,1);
-      if ( choice > (instant_b(c)*abundance(c)+m(c)) / (instant_b(c)*abundance(c)+m(c)+d(c)*abundance(c)))
+      if ( choice > (b(c)*abundance(c)+m(c)) / (b(c)*abundance(c)+m(c)+d(c)*abundance(c)))
         abundance(c) --;
       else 
         abundance(c) ++;

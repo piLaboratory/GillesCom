@@ -61,7 +61,7 @@ loadModule("Community", TRUE)
 #' @param save.int History saving interval (in simulated time units)
 #' @param stochastic Optional; only use if you want to include demographic stocasticity. A data.frame consisting of 
 #' two columns. The first represents the time intervals of the stochastic variation, and the second represents the
-#' multiplier to birth rates at that time intervals. See the vignettes for a more in-depth explanation.
+#' multiplier to carrying capacities at that time intervals. See the vignettes for a more in-depth explanation.
 #' @examples
 #' # Initializes the community
 #' Com = Init_Community(100)
