@@ -39,6 +39,9 @@ relation between total populations and carrying capacities).}
 
 \item{   \code{environmental}}{ contains a \code{data.frame} related to how demographic environmentality or
 environmental changes affect the community. See the vignettes for details.}
+
+\item{   \code{environmental_strength}}{ contains a vector indicating how much the environmental fluctuations
+affect each species. Defaults to 1 for all species. See the vignettes for details.}
 }
 }
 \examples{

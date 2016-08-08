@@ -1,6 +1,6 @@
 # File compatibility version. MUST be updated whenever a package change might
 # render the previous saved files unusable.
-.COMPAT = "0.1.3"
+.COMPAT = "0.1.4"
 
 #' File persistence of simulations
 #' 
@@ -44,13 +44,14 @@ GillesComToFile <- function(community, file="GillesCom.rda") {
     trajectories = community$trajectories
     interaction = community$interaction
     environmental = community$environmental
+    environmental_strength = community$environmental_strength
     K = community$K
     d0 = community$d0
     b = community$b
     m = community$m
     time = community$time
     cycles = community$cycles
-    save(compat, seed, date, abundance, trajectories, interaction, K, d0, b, m, time, save_int, cycles, environmental, file=file)
+    save(compat, seed, date, abundance, trajectories, interaction, K, d0, b, m, time, save_int, cycles, environmental, environmental_strength, file=file)
     cat("File saved. Size:", format.h(file.info(file)$size), "\n")
 }
 
@@ -59,7 +60,7 @@ GillesComToFile <- function(community, file="GillesCom.rda") {
 GillesComFromFile <- function(file="GillesCom.rda") {
     # to avoid NOTEs at R check:
     abundance <- NULL; trajectories <- NULL; interaction <- NULL; K <- NULL; d0 <- NULL
-    b <- NULL; m <- NULL; time <- NULL; save_int <- NULL; 
+    b <- NULL; m <- NULL; time <- NULL; save_int <- NULL; environmental_strength <- NULL
     compat <- NULL; seed <- NULL; cycles <- NULL; environmental <- NULL;
     # Does the actual loading
     load(file=file)
@@ -67,7 +68,7 @@ GillesComFromFile <- function(file="GillesCom.rda") {
     if (compat != .COMPAT) warning("NOTE: Incompatible file type!\nExpected ", .COMPAT, ", got ", compat)
     a = new (Community, abundance, interaction, save_int)
     a$b = b; a$cycles = cycles; a$d0 = d0; a$K = K; a$m = m; a$environmental = environmental; a$time = time
-    a$trajectories = trajectories
+    a$trajectories = trajectories; a$environmental_strength = environmental_strength
     return(a);
 }
 

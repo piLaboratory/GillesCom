@@ -29,7 +29,7 @@ double interpol (arma::vec time, arma::vec f, double t) {
         if (time[i] > t) break;
     if (i == 0) return f[0];
     if (i == time.n_elem) return f[f.n_elem - 1];
-    // this formula incurs on cancelation errors if the time step is small!
+    // this formula incurs on cancellation errors if the time step is small!
     // find a better formula ASAP
     return f[i-1] + (f[i] - f[i-1]) * (t - time[i-1]) / (time[i] - time[i-1]); 
 }
@@ -44,6 +44,8 @@ class Community {
     arma::mat interaction;
     // environmental effects matrix
     arma::mat environmental;
+    // environmental strength vector
+    arma::vec environmental_strength;
     // support capacity
     arma::vec K;
     // death rate when abundance=0
@@ -85,7 +87,7 @@ class Community {
       // environmental multiplier for K:
       if (environmental.n_elem > 0 ) {
         mult = interpol ( environmental.col(0), environmental.col(1), time );
-        instant_K = K * mult;
+        instant_K = K + ((mult - 1.0) * K) % environmental_strength;
       }
       arma::vec dslope = (b-d0)/instant_K; //slope of the density-dependent linear relation of death rate to N
       // % performs element-wise multiplication
@@ -93,7 +95,7 @@ class Community {
       for (int i = 0; i < abundance.n_elem; i++) if(abundance(i) == 0) d(i) = 0;
       //Gillespie weights for each specie, which are the sum of their rates
       arma::vec w = (abundance % (b + d)) + m; 
-      //sampling which species will suffer the next action, proportionaly to their weights
+      //sampling which species will suffer the next action, proportionally to their weights
       int c = Csample(w);
       // Should the selected species gain or lose an individual?
       double choice = R::runif(0,1);
@@ -103,7 +105,11 @@ class Community {
         abundance(c) ++;
       // advances the simulation clock
       double elapsed = R::rexp(1.0 / sum(w));
-      if (elapsed > save_int) warning("Time elapsed larger than save interval!");
+      if (elapsed > save_int) {warning("Time elapsed larger than save interval!");
+      warning(elapsed);
+      warning(this->time);
+      warning(sum(w));
+      }
       // only saves trajectories if we have completed a saving period
       if (((int) (time / save_int)) !=  ((int) ((time+elapsed)/save_int)))
         saveHistory();
@@ -115,8 +121,9 @@ class Community {
         bdm();
     }
     void Tbdm(double _time) {
-        while (time < _time)
+        while (time < _time) {
             bdm();
+        }
     }
 };
 
@@ -128,6 +135,7 @@ RCPP_MODULE (Community) {
         .field("trajectories", &Community::trajectories)
         .field("interaction", &Community::interaction)
         .field("environmental", &Community::environmental)
+        .field("environmental_strength", &Community::environmental_strength)
         .field("K", &Community::K)
         .field("d0", &Community::d0)
         .field("b", &Community::b)

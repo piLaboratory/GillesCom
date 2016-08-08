@@ -6,7 +6,7 @@
 \title{Community generating functions}
 \usage{
 Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
-  save.int = 1, environmental = data.frame())
+  save.int = 1, environmental = data.frame(), environmental.strength = 1)
 
 bdm(community, count, time, progress = c("text", "none"))
 }
@@ -31,6 +31,10 @@ resulting list of the \code{\link{ls_migration}} function}
 fluctuations. A data.frame consisting of 
 two columns. The first represents the time intervals of the environmental variation, and the second represents the
 multiplier to carrying capacities at those time intervals. See the vignettes for a more in-depth explanation.}
+
+\item{environmental.strength}{Optional; when simulating a community subject to environmental variation, this parameter
+details how much each species is affected by the environmental fluctuations. Defaults to 1, see vignettes for
+details.}
 
 \item{community}{An object of class \code{\link{Community}}}
 
