@@ -81,7 +81,7 @@ class Community {
       trajectories[2] = t2;
     }
     void bdm() {
-      double mult; arma::vec instant_K = b;
+      double mult; arma::vec instant_K = K;
       // stochastic multiplier for K:
       if (stochastic.n_elem > 0 ) {
         mult = interpol ( stochastic.col(0), stochastic.col(1), time );
