@@ -32,8 +32,8 @@
 #'  \item{  \code{$save_int}}{ contains the saving interval, which is the simulation time that must go by between "snapshots"
 #'    that are saved in the slot \code{$trajectories}.}
 #'
-#' \item{   \code{stochastic}}{ contains a \code{data.frame} related to how demographic stochasticity affects the
-#'    community. See the vignettes for details.}
+#' \item{   \code{environmental}}{ contains a \code{data.frame} related to how demographic environmentality or
+#' environmental changes affect the community. See the vignettes for details.}
 #' }
 #' @examples
 #' show(Community)
@@ -59,9 +59,10 @@ loadModule("Community", TRUE)
 #' @param m vector with per capita migration rate in the metacommunity. May be the given as the 
 #' resulting list of the \code{\link{ls_migration}} function
 #' @param save.int History saving interval (in simulated time units)
-#' @param stochastic Optional; only use if you want to include demographic stocasticity. A data.frame consisting of 
-#' two columns. The first represents the time intervals of the stochastic variation, and the second represents the
-#' multiplier to carrying capacities at that time intervals. See the vignettes for a more in-depth explanation.
+#' @param environmental Optional; only use if you want to include demographic stocasticity or environmental
+#' fluctuations. A data.frame consisting of 
+#' two columns. The first represents the time intervals of the environmental variation, and the second represents the
+#' multiplier to carrying capacities at those time intervals. See the vignettes for a more in-depth explanation.
 #' @examples
 #' # Initializes the community
 #' Com = Init_Community(100)
@@ -83,7 +84,7 @@ loadModule("Community", TRUE)
 #' @import stats sads Rcpp RcppArmadillo methods graphics
 #' @useDynLib GillesCom
 Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0, save.int = 1, 
-                           stochastic = data.frame()) {
+                           environmental = data.frame()) {
   # Error checking, etc
   if (length(abundance)==1) abundance <- rep(0, abundance)
   if (length(abundance) == 0) stop ("Please provide an abundance vector or a positive number of species")
@@ -101,10 +102,10 @@ Init_Community <- function(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 
   if (any(abundance < 0)) stop ("Abundances must be positive integers or zero")
   if (length(K) != J || length(d0) != J || length(b) != J || length(m) != J || dim(interaction) != c(J,J))
      stop("All objects must have the same dimension as the abundance vector")
-#  create_community(abundance, interaction, K, d0, b, m, save.int, as.matrix(stochastic))
+#  create_community(abundance, interaction, K, d0, b, m, save.int, as.matrix(environmental))
   # TODO: Move around some of the parameters to the constructor?
   a = new (Community, abundance, interaction, save.int)
-  a$K = K; a$b = b; a$m = m; a$d0 = d0; a$stochastic = as.matrix(stochastic)
+  a$K = K; a$b = b; a$m = m; a$d0 = d0; a$environmental = as.matrix(environmental)
   return(a)
 }
 

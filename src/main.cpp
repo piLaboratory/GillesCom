@@ -42,8 +42,8 @@ class Community {
     Rcpp::List trajectories;
     // interaction matrix
     arma::mat interaction;
-    // stochastic effects matrix
-    arma::mat stochastic;
+    // environmental effects matrix
+    arma::mat environmental;
     // support capacity
     arma::vec K;
     // death rate when abundance=0
@@ -82,9 +82,9 @@ class Community {
     }
     void bdm() {
       double mult; arma::vec instant_K = K;
-      // stochastic multiplier for K:
-      if (stochastic.n_elem > 0 ) {
-        mult = interpol ( stochastic.col(0), stochastic.col(1), time );
+      // environmental multiplier for K:
+      if (environmental.n_elem > 0 ) {
+        mult = interpol ( environmental.col(0), environmental.col(1), time );
         instant_K = K * mult;
       }
       arma::vec dslope = (b-d0)/instant_K; //slope of the density-dependent linear relation of death rate to N
@@ -127,7 +127,7 @@ RCPP_MODULE (Community) {
         .field("abundance", &Community::abundance)
         .field("trajectories", &Community::trajectories)
         .field("interaction", &Community::interaction)
-        .field("stochastic", &Community::stochastic)
+        .field("environmental", &Community::environmental)
         .field("K", &Community::K)
         .field("d0", &Community::d0)
         .field("b", &Community::b)

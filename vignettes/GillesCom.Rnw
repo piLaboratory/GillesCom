@@ -181,7 +181,7 @@ plot(K.df, type='l')
 
 Then, we generate a community under the effect of this stochastic carrying capacity multiplier as:
 <<>>=
-stochcom = Init_Community(50, stochastic=K.df)
+stochcom = Init_Community(50, environmental=K.df)
 bdm(stochcom, time=30)
 diagPlots(stochcom)
 @

@@ -6,7 +6,7 @@
 \title{Community generating functions}
 \usage{
 Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
-  save.int = 1, stochastic = data.frame())
+  save.int = 1, environmental = data.frame())
 
 bdm(community, count, time, progress = c("text", "none"))
 }
@@ -27,9 +27,10 @@ resulting list of the \code{\link{ls_migration}} function}
 
 \item{save.int}{History saving interval (in simulated time units)}
 
-\item{stochastic}{Optional; only use if you want to include demographic stocasticity. A data.frame consisting of 
-two columns. The first represents the time intervals of the stochastic variation, and the second represents the
-multiplier to birth rates at that time intervals. See the vignettes for a more in-depth explanation.}
+\item{environmental}{Optional; only use if you want to include demographic stocasticity or environmental
+fluctuations. A data.frame consisting of 
+two columns. The first represents the time intervals of the environmental variation, and the second represents the
+multiplier to carrying capacities at those time intervals. See the vignettes for a more in-depth explanation.}
 
 \item{community}{An object of class \code{\link{Community}}}
 

@@ -1,6 +1,6 @@
 # File compatibility version. MUST be updated whenever a package change might
 # render the previous saved files unusable.
-.COMPAT = "0.1.2"
+.COMPAT = "0.1.3"
 
 #' File persistence of simulations
 #' 
@@ -27,7 +27,7 @@
 #' # Notice that a and b are different objects...
 #' identical (a,b)
 #' # But their content is the same
-#' identical (a$trajectories, b$trajectories)
+#' stopifnot(identical (a$trajectories, b$trajectories))
 #' # To load the random seed as well...
 #' .Random.seed <- SeedFromFile(filename)
 #' @export
@@ -43,14 +43,14 @@ GillesComToFile <- function(community, file="GillesCom.rda") {
     date = Sys.time()
     trajectories = community$trajectories
     interaction = community$interaction
-    stochastic = community$stochastic
+    environmental = community$environmental
     K = community$K
     d0 = community$d0
     b = community$b
     m = community$m
     time = community$time
     cycles = community$cycles
-    save(compat, seed, date, abundance, trajectories, interaction, K, d0, b, m, time, save_int, cycles, stochastic, file=file)
+    save(compat, seed, date, abundance, trajectories, interaction, K, d0, b, m, time, save_int, cycles, environmental, file=file)
     cat("File saved. Size:", format.h(file.info(file)$size), "\n")
 }
 
@@ -60,13 +60,13 @@ GillesComFromFile <- function(file="GillesCom.rda") {
     # to avoid NOTEs at R check:
     abundance <- NULL; trajectories <- NULL; interaction <- NULL; K <- NULL; d0 <- NULL
     b <- NULL; m <- NULL; time <- NULL; save_int <- NULL; 
-    compat <- NULL; seed <- NULL; cycles <- NULL; stochastic <- NULL;
+    compat <- NULL; seed <- NULL; cycles <- NULL; environmental <- NULL;
     # Does the actual loading
     load(file=file)
     cat("File loaded. Size:", format.h(file.info(file)$size), "\nSimulation date/time:", format.Date(date),"\n")
     if (compat != .COMPAT) warning("NOTE: Incompatible file type!\nExpected ", .COMPAT, ", got ", compat)
     a = new (Community, abundance, interaction, save_int)
-    a$b = b; a$cycles = cycles; a$d0 = d0; a$K = K; a$m = m; a$stochastic = stochastic; a$time = time
+    a$b = b; a$cycles = cycles; a$d0 = d0; a$K = K; a$m = m; a$environmental = environmental; a$time = time
     a$trajectories = trajectories
     return(a);
 }
