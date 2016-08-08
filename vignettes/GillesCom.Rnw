@@ -23,7 +23,7 @@
 \author{Paulo In\'acio Prado and Andre Chalom \\ Theoretical Ecology Lab \\ LAGE at the Dep of Ecology, USP, Brazil \\ 
   \url{http://ecologia.ib.usp.br/let/} \\ \url{prado@ib.usp.br}}
 
-\date{July, 01, 2016}
+\date{August, 08, 2016}
 
 \maketitle
 
