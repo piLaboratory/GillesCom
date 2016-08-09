@@ -20,21 +20,20 @@ int Csample (arma::vec prob) {
   return prob.n_elem;
 }
 
-// interpolates a function f(time) at instant t
-double interpol (arma::vec time, arma::vec f, double t) {
-    int i;
-    // This is inefficient, should be changed some day
-    // maybe we could cache the last "i" used?
-    for (i = 0; i < time.n_elem; i++) 
-        if (time[i] > t) break;
-    if (i == 0) return f[0];
-    if (i == time.n_elem) return f[f.n_elem - 1];
-    // this formula incurs on cancellation errors if the time step is small!
-    // find a better formula ASAP
-    return f[i-1] + (f[i] - f[i-1]) * (t - time[i-1]) / (time[i] - time[i-1]); 
-}
 
 class Community {
+  private:
+      int cached_i;
+      // interpolates a function f(time) at instant t
+      double interpol_envir () {
+          int i;
+          for (i = cached_i; i < environmental.col(0).n_elem; i++) 
+              if (environmental.col(0)[i] > time) break;
+          cached_i = i - 1;
+          if (i == 0) return environmental.col(1)[0];
+          if (i == environmental.col(0).n_elem) return environmental.col(1)[environmental.col(1).n_elem - 1];
+          return environmental.col(1)[i-1] + (environmental.col(1)[i] - environmental.col(1)[i-1]) * (time - environmental.col(0)[i-1]) / (environmental.col(0)[i] - environmental.col(0)[i-1]); 
+      }
   public:
     // abundance vector: counts how many individuals from each species
     arma::vec abundance;
@@ -61,6 +60,7 @@ class Community {
   public:
     // TODO: Learn how to use a constructor with 7+ parameters in the Rcpp module??
     Community(arma::vec _abundance, arma::mat _interaction, double _save_int) {
+        cached_i = 0;
         abundance = _abundance; save_int = _save_int;
         interaction = _interaction;
         time = 0; cycles = 0; 
@@ -86,7 +86,7 @@ class Community {
       double mult; arma::vec instant_K = K;
       // environmental multiplier for K:
       if (environmental.n_elem > 0 ) {
-        mult = interpol ( environmental.col(0), environmental.col(1), time );
+        mult = interpol_envir();
         instant_K = K + ((mult - 1.0) * K) % environmental_strength;
       }
       arma::vec dslope = (b-d0)/instant_K; //slope of the density-dependent linear relation of death rate to N
@@ -105,11 +105,7 @@ class Community {
         abundance(c) ++;
       // advances the simulation clock
       double elapsed = R::rexp(1.0 / sum(w));
-      if (elapsed > save_int) {warning("Time elapsed larger than save interval!");
-      warning(elapsed);
-      warning(this->time);
-      warning(sum(w));
-      }
+      if (elapsed > save_int) warning("Time elapsed larger than save interval!");
       // only saves trajectories if we have completed a saving period
       if (((int) (time / save_int)) !=  ((int) ((time+elapsed)/save_int)))
         saveHistory();
