@@ -173,9 +173,7 @@ octavOverTime(com)
 The following lines of code generate a data frame with two columns, the first representing the time and the second representing a common multiplier for the carrying capacities of all species due to environmental stochasticity. With the parameters below, a typical run will be constrained in the 0.25 - 4 interval.
 
 <<stochasticity>>=
-Time <- 100; intervals <- 10000; sd = 0.01
-K <- exp(cumsum(rnorm(intervals, sd=sd)))
-K.df <- data.frame(time = seq(0, Time, length=intervals), K)
+K.df = stoch_environment(time = 100, sd = 0.01)
 plot(K.df, type='l')
 @
 
