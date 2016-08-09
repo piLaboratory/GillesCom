@@ -20,19 +20,21 @@ int Csample (arma::vec prob) {
   return prob.n_elem;
 }
 
-
 class Community {
   private:
+      // Caching the time interval for environmental interpolation
+      // As this is only a cache, it does not need file persistence
       int cached_i;
-      // interpolates a function f(time) at instant t
+      // interpolates the function environmental(t) at instant "time"
       double interpol_envir () {
           int i;
-          for (i = cached_i; i < environmental.col(0).n_elem; i++) 
-              if (environmental.col(0)[i] > time) break;
+          for (i = cached_i; i < environmental.n_rows; i++) 
+              if (environmental(i,0) > time) break;
           cached_i = i - 1;
           if (i == 0) return environmental.col(1)[0];
-          if (i == environmental.col(0).n_elem) return environmental.col(1)[environmental.col(1).n_elem - 1];
-          return environmental.col(1)[i-1] + (environmental.col(1)[i] - environmental.col(1)[i-1]) * (time - environmental.col(0)[i-1]) / (environmental.col(0)[i] - environmental.col(0)[i-1]); 
+          if (i == environmental.n_rows) return environmental(environmental.n_rows - 1,1);
+          return environmental(i-1,1) + (environmental(i,1) - environmental(i-1,1))
+                 * (time - environmental(i-1,0)) / (environmental(i,0) - environmental(i-1,0)); 
       }
   public:
     // abundance vector: counts how many individuals from each species
@@ -69,7 +71,7 @@ class Community {
                 arma::vec(1, arma::fill::zeros));
     }
     void saveHistory() {
-////  ######## TODO: This code REALLY needs a cleanup! ##########
+////  This code could use a cleanup, but the performance impact here is negligible
       arma::mat tt = trajectories[0];
       tt.insert_rows(tt.n_rows, abundance.t());
       trajectories[0] = tt;
