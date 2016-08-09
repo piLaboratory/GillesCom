@@ -27,9 +27,12 @@ resulting list of the \code{\link{ls_migration}} function}
 
 \item{save.int}{History saving interval (in simulated time units)}
 
-\item{stochastic}{Optional; only use if you want to include demographic stocasticity. A data.frame consisting of 
-two columns. The first represents the time intervals of the stochastic variation, and the second represents the
-multiplier to birth rates at that time intervals. See the vignettes for a more in-depth explanation.}
+\item{stochastic}{Optional; only use if you want to make birth rates vary over time
+(e.g. to include environmental stochasticity). A data.frame consisting of 
+two columns. The first represents values of the time variable
+and the second represents the
+multiplier to birth rates at each time. Values of the multiplier within intervals are linearly interpolated.
+See the vignettes for a more in-depth explanation.}
 
 \item{community}{An object of class \code{\link{Community}}}
 
@@ -37,7 +40,7 @@ multiplier to birth rates at that time intervals. See the vignettes for a more i
 
 \item{time}{Total time to be simulated (i.e., if the simulation clock is in t=10, bdm(time=10) will simulate up to t=20)}
 
-\item{progress}{Should a text bar be used? Currently, "text" will produce a text based bar, and \code{NULL} will produce none.}
+\item{progress}{Should a text bar be used? Currently, "text" will produce a text based bar, and "none" will produce none.}
 }
 \value{
 \code{Init_Community} returns an object of class \code{\link{Community}}. 

@@ -16,7 +16,9 @@ ls_migration(J, S, alpha, m)
 \item{m}{per species migration rate}
 }
 \description{
-Generates migration rates from a log-series metacommunity. The user is expected
-to provide either S or alpha, but not both.
+Generates migration rates from a log-series metacommunity.
+}
+\note{
+The user is expected to provide either S or alpha, but not both.
 }
 

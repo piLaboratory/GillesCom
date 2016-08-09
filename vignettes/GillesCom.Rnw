@@ -169,7 +169,9 @@ octavOverTime(com)
 @
 
 \section{Environmental stochasticity}
-
+So far all rates were constant for each species. Currently it is posible to make birth rates vary over time. 
+This can be used to simulate some kind of environmental variation in the demographic rates, such as cycles or
+environmental stochasticity.
 The following lines of code generate a data frame with two columns, the first representing the time and the second representing a common multiplier for the birth rates of all species due to environmental stochasticity. With the parameters below, a typical run will be constrained in the 0.25 - 4 interval.
 
 <<stochasticity>>=
