@@ -14,7 +14,7 @@ Imports:
     Rcpp,
     RcppArmadillo,
     bbmle,
-    sads
+    sads (>= 0.3.1)
 LinkingTo: Rcpp, RcppArmadillo
 Description: Simulation tools for generating ecological community data (such as
     species abundance distributions) using the Gillespie continuous time method.

@@ -27,10 +27,12 @@ resulting list of the \code{\link{ls_migration}} function}
 
 \item{save.int}{History saving interval (in simulated time units)}
 
-\item{environmental}{Optional; only use if you want to include demographic stocasticity or environmental
-fluctuations. A data.frame consisting of 
-two columns. The first represents the time intervals of the environmental variation, and the second represents the
-multiplier to carrying capacities at those time intervals. See the vignettes for a more in-depth explanation.}
+\item{environmental}{Optional; only use if you want to make the carrying capacities for the species vary over
+time (e.g. to include demographic stocasticity or environmental fluctuations. This parameter must contain a 
+data.frame consisting of two columns. The first represents the time variable, and the second represents the
+multiplier to carrying capacities at each time. Values of the multiplier are linearly interpolated inside each 
+time interval. You can create a data frame with these requirements using the \code{\link{stoch_environment}} function.
+See the vignettes for a more in-depth explanation.}
 
 \item{environmental.strength}{Optional; when simulating a community subject to environmental variation, this parameter
 details how much each species is affected by the environmental fluctuations. Defaults to 1, see vignettes for
@@ -42,7 +44,7 @@ details.}
 
 \item{time}{Total time to be simulated (i.e., if the simulation clock is in t=10, bdm(time=10) will simulate up to t=20)}
 
-\item{progress}{Should a text bar be used? Currently, "text" will produce a text based bar, and \code{NULL} will produce none.}
+\item{progress}{Should a text bar be used? Currently, "text" will produce a text based bar, and "none" will produce none.}
 }
 \value{
 \code{Init_Community} returns an object of class \code{\link{Community}}. 
