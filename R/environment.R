@@ -1,7 +1,8 @@
 #' Random environment generator
 #'
 #' This function is a simple generator for a stochastic data frame
-#' that can be used to represent a randomly fluctuating environment
+#' that can be used to represent a fluctuating environment
+#' that performs a random walk
 #' for use in \code{\link{Init_Community}}.
 #'
 #' @export
