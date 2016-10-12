@@ -23,7 +23,7 @@
 \author{Paulo In\'acio Prado and Andre Chalom \\ Theoretical Ecology Lab \\ LAGE at the Dep of Ecology, USP, Brazil \\ 
   \url{http://ecologia.ib.usp.br/let/} \\ \url{prado@ib.usp.br}}
 
-\date{July, 01, 2016}
+\date{August, 08, 2016}
 
 \maketitle
 
@@ -77,7 +77,7 @@ migration <- ls_migration(J = 1e6, alpha = 50, m = 1)
 
 Now $N$ is the number of species in the metacommunity. Let us now generate a matrix representing the
 interactions between species. There are three more widely used choices: the species may not interact at all
-with one another (so the matrix will have all zeroes on non-diagonal elements), the species may affect
+with one another (so the matrix will have all zeros on non-diagonal elements), the species may affect
 one another exactly as they affect an individual of the same species (which is, in a sense, neutral), or 
 the matrix may have random competition terms with one another. These matrices can be constructed using the 
 following functions:
@@ -87,10 +87,10 @@ neutral <- ones(N)
 random <- interaction_matrix(N, stren = 0.1, con=1)
 @
 
-The additional parameters for function \code{interaction\_matrix} represent the strenght of the competition and 
+The additional parameters for function \code{interaction\_matrix} represent the strength of the competition and 
 the connectivity of the interaction matrix.
 
-The interaction matrix may also be constructed using a Gamma distribution for generating the competition strenghts;
+The interaction matrix may also be constructed using a Gamma distribution for generating the competition strengths;
 see \cite{Kessler2015} for more details.
 
 \section{Initializing the community}
@@ -100,18 +100,20 @@ This is mostly transparent to the user, but some care must be exercised in order
 of the Rcpp integration. In order to initialize a community, use the function 
 \code{Init\_Community}, and assign the resulting object to a variable.
 <<Init>>=
-com = Init_Community(abundance=rep(0, N), interaction=random, b=1, m = migration)
+com = Init_Community(abundance=rep(0, N), interaction=random, b=1, m = migration, save.int=1)
 @
 
-The arguments $m$, $b$ and $d0$ of this function are expanded to vectors of the appropriate length, if
-necessary.
+Many arguments 
+of this function are expanded to vectors of the appropriate length, if
+necessary. This is the case for $m$ (migration rate), $b$ (birth rate)  and $d0$ (basal death rate),
+for example. See the help of \code{Init\_Community} for the full list of parameters. 
+
 
 \section{Running and examining the simulation}
 In order to run simulation cycles of the birth, death and migration process, execute the function \code{bdm}:
+
 <<bdm>>=
-bdm(com)
 bdm(com, count = 1e4, progress="none")
-bdm(com, time = 2, progress="none")
 @
 
 The function \code{bdm} accepts the number of cycles to be run as the second parameter. 
@@ -119,9 +121,9 @@ Optionally, you may specify the units of simulated time that you want to run as 
 The last parameter controls whether a progress bar should be displayed on the screen.
 
 Notice that \code{bdm} does not return anything. It affects directly the object received as the first parameter.
-
 In order to query about the
 current status of the simulation, use the slots in the \code{Community} class (see \code{?Community} for a full list:
+
 <<functions>>=
 # Current abundance vector
 ab <- as.numeric(com$abundance)
@@ -133,6 +135,7 @@ print(com$cycles)
 # `Trajectories` saves a line for each time period elapsed (starting with 0):
 dim(com$trajectories[[1]])
 @
+
 
 Please note that the result from the slot \code{abundance} is \emph{not} the same as the last line 
 in \code{trajectories}. This is because the lines in \code{trajectories} is recorded whenever
@@ -168,24 +171,72 @@ radOverTime(com)
 octavOverTime(com)
 @
 
-\section{Environmental stochasticity}
-So far all rates were constant for each species. Currently it is posible to make birth rates vary over time. 
-This can be used to simulate some kind of environmental variation in the demographic rates, such as cycles or
-environmental stochasticity.
-The following lines of code generate a data frame with two columns, the first representing the time and the second representing a common multiplier for the birth rates of all species due to environmental stochasticity. With the parameters below, a typical run will be constrained in the 0.25 - 4 interval.
+Finally, notice that \code{bdm} is incremental. A new call will run simulations starting from the state of the community
+at the end of the last simulation, until a new community is set by \code{Init\_Community}.
 
-<<stochasticity>>=
-Time <- 100; intervals <- 10000; sd = 0.01
-birth <- exp(cumsum(rnorm(intervals, sd=sd)))
-birth.df <- data.frame(time = seq(0, Time, length=intervals), birth)
-plot(birth.df, type='l')
+<<bdm-incremental>>=
+com$cycles
+bdm(com, count = 1e4, progress="none")
+com$cycles
+com$time
+bdm(com, time = 2, progress="none")
+com$time
 @
 
-Then, we generate a community under the effect of this sotchastic birth rate multiplier as:
+
+\section{Environmental stochasticity}
+So far all rates were constant for each species. Currently it is posible to make carrying capacities vary over time. 
+This can be used to simulate some kind of environmental variation in the demographic rates, such as cycles or
+environmental stochasticity.
+The following lines of code generate a data frame with two columns, the first representing the time and the second representing a common multiplier for the carrying capacities of all species due to environmental stochasticity that performs a random walk. 
+With the parameters below, a typical run will be constrained in the 0.25 - 4 interval.
+
+<<stochasticity>>=
+K.df = stoch_environment(time = 30, sd = 0.01)
+plot(K.df, type='l')
+@
+
+Then, we generate a community under the effect of this stochastic carrying capacity multiplier as:
+
 <<>>=
-stochcom = Init_Community(50, stochastic=birth.df)
+stochcom = Init_Community(50, environmental=K.df)
 bdm(stochcom, time=30)
 diagPlots(stochcom)
+@
+
+The last value of the stochastic multiplier is kept for
+runs beyond the maximum time in the environmental stochasticity data frame.
+
+\subsection{Species sensitivities to environmental stochasticity}
+
+Finally, the \code{environmental.strength} parameter can be used to individually tune
+how much each species is affected by the environmental fluctuations. First, let us
+build a severely artificial \code{environmental} data frame to illustrate this more
+clearly. Here, the environment is at the default on time zero, gets better up to being
+twice as welcoming on time 100 and then falls in quality to almost a desert on time 200:
+
+<<>>=
+K.df = data.frame(time = c(0, 100, 200), K = c(1, 2, 0.1))
+plot(K.df, type='l')
+@
+
+Now, we construct a community with only 4 non-interacting species, all with the same
+carrying capacity. The first species will be fully affected by the environment (\code{str = 1}),
+the second will only suffer half the effect of the environment (\code{str = 0.5}), so when the environmental 
+multiplier is 2, the realized K for the species 1 will be 200, and for the species 2 it will be 150.
+The third species is totally unaffected by the environment, so it will remain on K = 100. And finally, the
+fourth species will be reversely affected by the environment (maybe it thrives on desertic conditions?),
+so its carrying capacity will be 0 on time 100 and almost 200 at time 200. The plot below shows the population size evolution for each species:
+
+<<>>=
+str = c(1, 0.5, 0, -1)
+stochcom2 = Init_Community(rep(100,4), interaction=diag(4), K = 100,
+                           environmental=K.df,
+                           environmental.strength = str)
+bdm(stochcom2, time=400)
+matplot(stochcom2$trajectories[[1]], type='l')
+legend("topleft", legend=c("Fully affected", "Half affected", "Not affected", "Reverse affected"), 
+       col=1:4, lty=1:4, bty="n")
 @
 
 \section{File persistence}

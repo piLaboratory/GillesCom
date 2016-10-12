@@ -6,7 +6,7 @@
 \title{Community generating functions}
 \usage{
 Init_Community(abundance, interaction, K = 1000, b = 1, m = 0.1, d0 = 0,
-  save.int = 1, stochastic = data.frame())
+  save.int = 1, environmental = data.frame(), environmental.strength = 1)
 
 bdm(community, count, time, progress = c("text", "none"))
 }
@@ -27,12 +27,16 @@ resulting list of the \code{\link{ls_migration}} function}
 
 \item{save.int}{History saving interval (in simulated time units)}
 
-\item{stochastic}{Optional; only use if you want to make birth rates vary over time
-(e.g. to include environmental stochasticity). A data.frame consisting of 
-two columns. The first represents values of the time variable
-and the second represents the
-multiplier to birth rates at each time. Values of the multiplier within intervals are linearly interpolated.
+\item{environmental}{Optional; only use if you want to make the carrying capacities for the species vary over
+time (e.g. to include demographic stocasticity or environmental fluctuations. This parameter must contain a 
+data.frame consisting of two columns. The first represents the time variable, and the second represents the
+multiplier to carrying capacities at each time. Values of the multiplier are linearly interpolated inside each 
+time interval. You can create a data frame with these requirements using the \code{\link{stoch_environment}} function.
 See the vignettes for a more in-depth explanation.}
+
+\item{environmental.strength}{Optional; when simulating a community subject to environmental variation, this parameter
+details how much each species is affected by the environmental fluctuations. Defaults to 1, see vignettes for
+details.}
 
 \item{community}{An object of class \code{\link{Community}}}
 

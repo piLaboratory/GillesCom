@@ -37,8 +37,11 @@ relation between total populations and carrying capacities).}
  \item{  \code{$save_int}}{ contains the saving interval, which is the simulation time that must go by between "snapshots"
    that are saved in the slot \code{$trajectories}.}
 
-\item{   \code{stochastic}}{ contains a \code{data.frame} related to how demographic stochasticity affects the
-   community. See the vignettes for details.}
+\item{   \code{environmental}}{ contains a \code{data.frame} related to how demographic environmentality or
+environmental changes affect the community. See the vignettes for details.}
+
+\item{   \code{environmental_strength}}{ contains a vector indicating how much the environmental fluctuations
+affect each species. Defaults to 1 for all species. See the vignettes for details.}
 }
 }
 \examples{

@@ -41,7 +41,7 @@ b = GillesComFromFile(filename)
 # Notice that a and b are different objects...
 identical (a,b)
 # But their content is the same
-identical (a$trajectories, b$trajectories)
+stopifnot(identical (a$trajectories, b$trajectories))
 # To load the random seed as well...
 .Random.seed <- SeedFromFile(filename)
 }

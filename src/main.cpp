@@ -20,21 +20,22 @@ int Csample (arma::vec prob) {
   return prob.n_elem;
 }
 
-// interpolates a function f(time) at instant t
-double interpol (arma::vec time, arma::vec f, double t) {
-    int i;
-    // This is inefficient, should be changed some day
-    // maybe we could cache the last "i" used?
-    for (i = 0; i < time.n_elem; i++) 
-        if (time[i] > t) break;
-    if (i == 0) return f[0];
-    if (i == time.n_elem) return f[f.n_elem - 1];
-    // this formula incurs on cancelation errors if the time step is small!
-    // find a better formula ASAP
-    return f[i-1] + (f[i] - f[i-1]) * (t - time[i-1]) / (time[i] - time[i-1]); 
-}
-
 class Community {
+  private:
+      // Caching the time interval for environmental interpolation
+      // As this is only a cache, it does not need file persistence
+      int cached_i;
+      // interpolates the function environmental(t) at instant "time"
+      double interpol_envir () {
+          int i;
+          for (i = cached_i; i < environmental.n_rows; i++) 
+              if (environmental(i,0) > time) break;
+          cached_i = i - 1;
+          if (i == 0) return environmental.col(1)[0];
+          if (i == environmental.n_rows) return environmental(environmental.n_rows - 1,1);
+          return environmental(i-1,1) + (environmental(i,1) - environmental(i-1,1))
+                 * (time - environmental(i-1,0)) / (environmental(i,0) - environmental(i-1,0)); 
+      }
   public:
     // abundance vector: counts how many individuals from each species
     arma::vec abundance;
@@ -42,8 +43,10 @@ class Community {
     Rcpp::List trajectories;
     // interaction matrix
     arma::mat interaction;
-    // stochastic effects matrix
-    arma::mat stochastic;
+    // environmental effects matrix
+    arma::mat environmental;
+    // environmental strength vector
+    arma::vec environmental_strength;
     // support capacity
     arma::vec K;
     // death rate when abundance=0
@@ -59,6 +62,7 @@ class Community {
   public:
     // TODO: Learn how to use a constructor with 7+ parameters in the Rcpp module??
     Community(arma::vec _abundance, arma::mat _interaction, double _save_int) {
+        cached_i = 0;
         abundance = _abundance; save_int = _save_int;
         interaction = _interaction;
         time = 0; cycles = 0; 
@@ -67,7 +71,7 @@ class Community {
                 arma::vec(1, arma::fill::zeros));
     }
     void saveHistory() {
-////  ######## TODO: This code REALLY needs a cleanup! ##########
+////  This code could use a cleanup, but the performance impact here is negligible
       arma::mat tt = trajectories[0];
       tt.insert_rows(tt.n_rows, abundance.t());
       trajectories[0] = tt;
@@ -81,23 +85,23 @@ class Community {
       trajectories[2] = t2;
     }
     void bdm() {
-      double mult; arma::vec instant_b = b;
-      // stochastic multiplier for the birth rate:
-      if (stochastic.n_elem > 0 ) {
-        mult = interpol ( stochastic.col(0), stochastic.col(1), time );
-        instant_b = b * mult;
+      double mult; arma::vec instant_K = K;
+      // environmental multiplier for K:
+      if (environmental.n_elem > 0 ) {
+        mult = interpol_envir();
+        instant_K = K + ((mult - 1.0) * K) % environmental_strength;
       }
-      arma::vec dslope = (instant_b-d0)/K; //slope of the density-dependent linear relation of death rate to N
+      arma::vec dslope = (b-d0)/instant_K; //slope of the density-dependent linear relation of death rate to N
       // % performs element-wise multiplication
       arma::vec d = d0 + dslope % (abundance.t() * interaction).t();
       for (int i = 0; i < abundance.n_elem; i++) if(abundance(i) == 0) d(i) = 0;
       //Gillespie weights for each specie, which are the sum of their rates
-      arma::vec w = (abundance % (instant_b + d)) + m; 
-      //sampling which species will suffer the next action, proportionaly to their weights
+      arma::vec w = (abundance % (b + d)) + m; 
+      //sampling which species will suffer the next action, proportionally to their weights
       int c = Csample(w);
       // Should the selected species gain or lose an individual?
       double choice = R::runif(0,1);
-      if ( choice > (instant_b(c)*abundance(c)+m(c)) / (instant_b(c)*abundance(c)+m(c)+d(c)*abundance(c)))
+      if ( choice > (b(c)*abundance(c)+m(c)) / (b(c)*abundance(c)+m(c)+d(c)*abundance(c)))
         abundance(c) --;
       else 
         abundance(c) ++;
@@ -115,8 +119,9 @@ class Community {
         bdm();
     }
     void Tbdm(double _time) {
-        while (time < _time)
+        while (time < _time) {
             bdm();
+        }
     }
 };
 
@@ -127,7 +132,8 @@ RCPP_MODULE (Community) {
         .field("abundance", &Community::abundance)
         .field("trajectories", &Community::trajectories)
         .field("interaction", &Community::interaction)
-        .field("stochastic", &Community::stochastic)
+        .field("environmental", &Community::environmental)
+        .field("environmental_strength", &Community::environmental_strength)
         .field("K", &Community::K)
         .field("d0", &Community::d0)
         .field("b", &Community::b)
