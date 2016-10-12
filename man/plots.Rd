@@ -6,15 +6,17 @@
 \alias{radOverTime}
 \title{Plotting functions}
 \usage{
-diagPlots(which = 1:4)
+diagPlots(community, which = 1:4)
 
-radOverTime(steps, col = c("gray90", "gray10", "blue4"), par.axis = list(),
-  ...)
-
-octavOverTime(steps, prop = TRUE, col = c("gray90", "gray10", "blue4"),
+radOverTime(community, steps, col = c("gray90", "gray10", "blue4"),
   par.axis = list(), ...)
+
+octavOverTime(community, steps, prop = TRUE, col = c("gray90", "gray10",
+  "blue4"), par.axis = list(), ...)
 }
 \arguments{
+\item{community}{An object of class \code{\link{Community}}}
+
 \item{which}{numerical, may be a single number or a vector: which plots should be done (see Details)}
 
 \item{steps}{number of intervals in which to cut the trajectories}
@@ -42,5 +44,12 @@ Notice that the default invocation of this function displays plots 1 to 4.
 
 The functions \code{radOverTime} and \code{octavOverTime} provide a superimposing plot
 with the rad and octav, respectively, at distinct points in time.
+}
+\examples{
+Com = Init_Community(50)
+bdm(Com, 1e4, progress="none")
+diagPlots(Com)
+radOverTime(Com)
+octavOverTime(Com)
 }
 
