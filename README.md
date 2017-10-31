@@ -11,7 +11,7 @@ This package is being developed to provide simulation tools for generating ecolo
 GillesCom is currently only supported in Linux environments.
 ```R
 library(devtools)
-install_github("piLaboratory/GillesCom")
+install_github("piLaboratory/GillesCom", build_vignettes = TRUE)
 ```
 
 See the examples on the package vignette with
