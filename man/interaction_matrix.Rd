@@ -22,4 +22,3 @@ ones(J)
 The function \code{interaction_matrix} generates a Lotka-Volterra interaction matrix, following May. For a 
 Caswell matrix, use \code{diag(J)}, and for a Hubbell matrix, use \code{ones(J)}.
 }
-

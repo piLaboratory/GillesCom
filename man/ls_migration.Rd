@@ -19,4 +19,3 @@ ls_migration(J, S, alpha, m)
 Generates migration rates from a log-series metacommunity. The user is expected
 to provide either S or alpha, but not both.
 }
-

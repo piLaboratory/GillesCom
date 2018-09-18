@@ -1,3 +1,4 @@
+#define R_STRICT_HEADERS
 #include<iostream>
 #include<fstream>
 #include<string>

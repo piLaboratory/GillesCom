@@ -2,8 +2,8 @@
 % Please edit documentation in R/plots.R
 \name{diagPlots}
 \alias{diagPlots}
-\alias{octavOverTime}
 \alias{radOverTime}
+\alias{octavOverTime}
 \title{Plotting functions}
 \usage{
 diagPlots(which = 1:4)
@@ -23,9 +23,9 @@ octavOverTime(steps, prop = TRUE, col = c("gray90", "gray10", "blue4"),
 
 \item{par.axis}{Additional graphical parameters for handling the axes of the plot.}
 
-\item{prop}{Logical. Should the octav be plotted using proportions (as opposed to absolute numbers)?}
-
 \item{\dots}{Additional graphical parameters for the plots, such as main title, labels, font size, etc; EXCEPT for the axis.}
+
+\item{prop}{Logical. Should the octav be plotted using proportions (as opposed to absolute numbers)?}
 }
 \description{
 These functions plot relevant information about a simulation
@@ -45,4 +45,3 @@ Notice that the default invocation of this function displays only the plots 1 to
 The functions \code{radOverTime} and \code{octavOverTime} provide a superimposing plot
 with the rad and octav, respectively, at distinct points in time.
 }
-

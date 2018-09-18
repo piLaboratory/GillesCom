@@ -2,8 +2,8 @@
 % Please edit documentation in R/Community.R
 \name{Init_Community}
 \alias{Init_Community}
-\alias{abundance}
 \alias{bdm}
+\alias{abundance}
 \alias{elapsed_time}
 \alias{trajectories}
 \title{Community}
@@ -73,4 +73,3 @@ elapsed_time()
 # History saves a line for each time period elapsed (starting with 0):
 dim(trajectories())
 }
-
